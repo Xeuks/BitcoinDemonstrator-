@@ -1,0 +1,22 @@
+input.ng-invalid-max {
+    border: 2px dashed red;
+}
+
+.indexHead {
+    min-height: 4rem;
+    background-color: chocolate;
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.indexHead img{
+    height: 40px;
+    padding-right: 10px;
+
+
+}
+
+.card {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
