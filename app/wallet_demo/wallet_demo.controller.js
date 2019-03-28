@@ -1,6 +1,13 @@
 'use strict';
 angular
     .module('myApp')
+    .config(['$routeProvider', function($routeProvider) {
+        $routeProvider.when('/wallet_demo', {
+            templateUrl: 'wallet_demo/view.html',
+            controller: 'WalletDemoController'
+        });
+    }])
+
     .filter('sumUtxos', function() {
         return function(data) {
             if (typeof(data) === 'undefined' || data.length === 0) {
@@ -13,6 +20,7 @@ angular
         };
     })
     .controller('WalletDemoController', ['$scope', 'bitcoinNetwork', function($scope, bitcoinNetwork) {
+
         $scope.wallets = bitcoinNetwork.getWallets();
 
         $scope.currentWallet = $scope.wallets[0];
@@ -77,6 +85,6 @@ angular
                 transaction.to.push({ address: $scope.currentWallet.address, amount: chargeBack});
             }
 
-            bitcoinNetwork.sendTransaction(transaction);
+            bitcoinNetwork.propagateTransaction(transaction);
         };
     }]);

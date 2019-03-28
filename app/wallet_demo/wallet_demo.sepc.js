@@ -19,7 +19,7 @@ describe("test wallet demo controller", function(){
             ];
         },
 
-        sendTransaction: function(tx) {
+        propagateTransaction: function(tx) {
             transaction = tx;
         }
     };
