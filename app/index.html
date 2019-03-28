@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-    <html ng-app="myApp">
+    <html lang="de" ng-app="myApp">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -10,7 +10,7 @@
 
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
         <script src="./app.js"></script>
-        <script src="./blockchain/bitcoinNetwork.js"></script>
+        <script src="blockchain/BitcoinNetwork.provider.js"></script>
         <script src="./wallet_demo/wallet_demo.controller.js"></script>
 
         <script src="./config.js"><!-- should be last script included --></script>
@@ -20,7 +20,7 @@
 
     <body class="container-fluid">
         <header class="row indexHead">
-            <img src="./images/BC_Logotype.png">
+            <img src="./images/BC_Logotype.png" alt="Bitcoin Logo">
             <h1> Demonstrator</h1>
         </header>
 
@@ -57,7 +57,7 @@
 
                 <div class="row justify-content-md-center">
                     <figure class="walletFigure col-auto text-center">
-                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
+                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
                         <figcaption>
                             Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
                         </figcaption>
