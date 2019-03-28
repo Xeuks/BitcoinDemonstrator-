@@ -12,11 +12,11 @@
                 Um mit Bitcoin zu handeln benötigt man eine sogenannte Wallet-Applikation. In dieser Applikation werden die vorhandenen
                 Bitcoins verwaltet. Über die Wallet können Zahlungen getätigt werden bzw. Bitcoins empfangen werden. Dabei wird in der Wallet-Applikation
                 eine Bitcoin Adresse generiert. Diese Adresse ist im ganzen Bitcoin Netzwerk eindeutig und so kann eine Person bzw. ein Wallet identifiziert werden.
-                Wenn nun Person A Bitcoins an Person B schicken will. Muss die Person A lediglich die Wallet Adresse von Person B wissen.
+                Wenn nun Person A Bitcoins an Person B schicken will. Muss die Person A lediglich die Wallet Adresse von Person B kennen.
             </p>
 
             <p class="card-text">
-                In dieser Domonstration wird aufgezeigt wie eine Bitcoin Transfert abläuft. Dazu müssen Sie nun bestimmen welche Wallets in der Transaktion invovliert sind.
+                In dieser Domonstration wird aufgezeigt wie eine Bitcoin Transfer abläuft. Dazu müssen Sie nun bestimmen welche Wallets in der Transaktion invovliert sind.
             </p>
         </div>
     </div>
@@ -30,7 +30,7 @@
             </figcaption>
         </figure>
 
-        <div class="col-auto"><img  src="./wallet_demo/images/transactionSend.JPG" height="60px" width="120px"/></div>
+        <div class="col-auto"><img  src="./wallet_demo/images/transactionSend.jpg" height="60px" width="120px"/></div>
 
         <figure class="walletFigure col-auto text-center">
             <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
@@ -98,11 +98,13 @@
             <p class="card-text">
                 In einer Wallet App kann nun die Transaktion abgeschlossen werden und die Zahlung würde daraufhin ins Bitcoin-Netzwerk versandt und damit zur Verarbeitung und Absegnung
                 weiter gereicht werden. Im folgenden Abschnitt wird beschrieben, wie die Wallet Applikation die Transaktion vorbereitet. Die Wallet verwaltet eine Liste mit allen Bitcoins
-                die der Benutzer besitzt. Im folgenden sehen sie diese Liste. Dabei wird bei einer Transaktion dieser Guthaben verwendet. Die erhaltenen Bitcoins können nicht weiter aufgebrochen werden.
+                die der Benutzer besitzt. Diese Bitcoins nennt man UTXO (unspent transaction output. Im folgenden sehen sie diese Liste. Dabei handelt es sich um Bitcoins die dem Wallet Besitzer
+                zugesendet wurden. Es kann diese für eine Transaktion verwenden und ausgeben.
             </p>
             <p class="card-text">
-                Man kann dies mit Münzen vergleichen man erhält münzen und kann nur mit den erhaltenen Münzen zahlen. Wenn man den Betrag nicht genau aufwenden kann, müsssen soviele Münzen
-                verwendet werden, bis der notwendige Betrag überschritten wird. Den überschuss wird als Rückgeld zurückgegeben. Dabei ist das Rückgeld eine neue Bitcoin Münze.
+                Man kann die UTXOs mit Münzen vergleichen. Man erhält Münzen und kann nur mit den erhaltenen Münzen zahlen. Wie bei echten Münzen kann man die UTXOs nicht weiter unterteilen.
+                Das heisst man muss mit der ganzen UTXO-Münze zahlen. Um einen Betrag zu entrichen müssen entsprechend genügend UTXO ausgewählt werden bis der notwendige Betrag erreicht bzw. überschritten
+                wurde. Den Überschuss wird als Rückgeld zurückgegeben. Dabei ist das Rückgeld eine neue UTXO Münze. Das Rückgeld wird ebenfalls in der Transaktion aufgelistet.
             </p>
             <p class="card-text">Bitte wählen Sie die Münzen mit denen bezahlt werden soll:</p>
 
@@ -119,7 +121,7 @@
             <div ng-if="(currentTransactionUtxos.length) > 0">
                 <p class="card-text">
                     Die Transaktion sieht wie folgt aus. Es gibt eine Liste von Eingangsmünzen und eine Liste von Empfänger mit dem entsprechende Betrag den diese erhalten.
-                    Hier ist zu beachten, dass das Rückgeld wieder an die gleiche Wallet Adresse zugesendet wird.
+                    Hier ist zu beachten, dass das Rückgeld wieder an die gleiche Wallet Adresse zugesandt wird.
 
                     <br/>
                     <br/>
