@@ -1,7 +1,10 @@
 'use strict';
 
 angular
-	.module('myApp').config( function(bitcoinNetworkProvider) {
+	.module('myApp').config( function($locationProvider, $routeProvider, bitcoinNetworkProvider) {
+
+
+
 		var miners = [];
 
 
@@ -29,5 +32,10 @@ angular
 
 
 		bitcoinNetworkProvider.createBitcoinNetwork(genesisBlock, [w1,w2], miners);
-		
+
+
+
+        $locationProvider.hashPrefix('!');
+
+        $routeProvider.otherwise({redirectTo: '/wallet_demo'});
 	});

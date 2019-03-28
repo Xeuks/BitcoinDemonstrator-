@@ -8,10 +8,13 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="index.css">
 
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+
+        <script src="lib/angular/angular.js"></script>
+        <script src="lib/angular-route/angular-route.js"></script>
         <script src="./app.js"></script>
-        <script src="blockchain/BitcoinNetwork.provider.js"></script>
+        <script src="bitcoinNetwork/BitcoinNetwork.provider.js"></script>
         <script src="./wallet_demo/wallet_demo.controller.js"></script>
+        <script src="blockchain_demo/blockchain.controller.js"></script>
 
         <script src="./config.js"><!-- should be last script included --></script>
 
@@ -26,171 +29,19 @@
 
         <div class="row">
             <section class="col-4">
-                <section>Blockchain</section>
+                <section ng-controller="BlockchainController">Blockchain {{test}}</section>
                 <section>Network</section>
 
             </section>
 
-            <article class="col" ng-controller="WalletDemoController">
-                <h2>Bitcoin-Wallets & Transaktionen</h2>
+            <div class="col" ng-view></div>
 
-                <div class="card row">
-                    <div class="card-header">
-                        <h5>Beschreibung</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">In dieser Demo wird aufgezeigt wie eine Wallet genutzt wird um Bitcoins zu senden.</p>
-
-                        <p class="card-text">
-                            Um mit Bitcoin zu handeln benötigt man eine sogenannte Wallet-Applikation. In dieser Applikation werden die vorhandenen
-                            Bitcoins verwaltet. Über die Wallet können Zahlungen getätigt werden bzw. Bitcoins empfangen werden. Dabei wird in der Wallet-Applikation
-                            eine Bitcoin Adresse generiert. Diese Adresse ist im ganzen Bitcoin Netzwerk eindeutig und so kann eine Person bzw. ein Wallet identifiziert werden.
-                            Wenn nun Person A Bitcoins an Person B schicken will. Muss die Person A lediglich die Wallet Adresse von Person B wissen.
-                        </p>
-
-                        <p class="card-text">
-                            In dieser Domonstration wird aufgezeigt wie eine Bitcoin Transfert abläuft. Dazu müssen Sie nun bestimmen welche Wallets in der Transaktion invovliert sind.
-                        </p>
-                    </div>
-                </div>
-
-
-                <div class="row justify-content-md-center">
-                    <figure class="walletFigure col-auto text-center">
-                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
-                        <figcaption>
-                            Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
-                        </figcaption>
-                    </figure>
-
-                    <div class="col-auto"><img  src="./wallet_demo/images/transactionSend.JPG" height="60px" width="120px"/></div>
-
-                    <figure class="walletFigure col-auto text-center">
-                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
-
-                        <figcaption>
-                            Wallet#<select name="txToWallet" ng-options="wallet.address for wallet in wallets | filter:{ address: '!'+currentWallet.address }" ng-model="toWallet"></select>
-                        </figcaption>
-                    </figure>
-                </div>
-
-                <div class="card row">
-                    <div class="card-header">
-                        <h5 class="card-title">Wallet Applikation</h5>
-                    </div>
-                    <div class="card-body">
-
-                        <p class="card-text">
-                            Wallet {{currentWallet.address}} besitzt momentan {{(currentWallet.utxos|sumUtxos)}} Bitcoins. In der Wallet App wird dem Benutzer eine Oberfläche
-                            zur Verfügung gestellt, in der er angeben kann, wie viel er dem Empfänger zusenden will. Jede Transaktion hat gewisse Transaktionsgebühren, diese können auch
-                            vom Walletbesitzer eingestellt werden. Je mehr Gebühren der Benutzer zu zahlen bereit ist, desto schneller wird die Transaktion verarbeitet.
-
-                            Zu diesem Thema wird in <b>TODO</b> näher eingegangen.
-                        </p>
-                        <p class="card-text">Bitte geben Sie einen Betrag und die Gebühren ein:</p>
-
-                        <form name="txForm" >
-                            <div class="form-group">
-                                <label>Betrag:</label>
-                                <input aria-describedby="amountHelp" class="form-control" id="txAmount" ng-model="amount" type="number" min="1" max="{{(currentWallet.utxos|sumUtxos) - fee}}" required>
-                                <small id="emailHelp" class="form-text text-muted">Betrag zwischen 1 und {{(currentWallet.utxos|sumUtxos) - fee }} angeben</small>
-
-                                <label>Fee:</label>
-                                <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" type="number" min="1" max="{{(currentWallet.utxos|sumUtxos) - amount}}" required>
-                                <small id="feeHelp" class="form-text text-muted">Fee zwischen 1 und {{(currentWallet.utxos|sumUtxos) - amount }} angeben</small>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-
-                <div class="card row">
-                    <div class="card-header">
-                        <h5 class="card-title">Interner Ablauf in der Wallet App</h5>
-                    </div>
-                    <div class="card-body">
-
-                        <p class="card-text">
-                            In einer Wallet App kann nun die Transaktion abgeschlossen werden und die Zahlung würde daraufhin ins Bitcoin-Netzwerk versandt und damit zur Verarbeitung und Absegnung
-                            weiter gereicht werden. Im folgenden Abschnitt wird beschrieben, wie die Wallet Applikation die Transaktion vorbereitet. Die Wallet verwaltet eine Liste mit allen Bitcoins
-                            die der Benutzer besitzt. Im folgenden sehen sie diese Liste. Dabei wird bei einer Transaktion dieser Guthaben verwendet. Die erhaltenen Bitcoins können nicht weiter aufgebrochen werden.
-                        </p>
-                        <p class="card-text">
-                            Man kann dies mit Münzen vergleichen man erhält münzen und kann nur mit den erhaltenen Münzen zahlen. Wenn man den Betrag nicht genau aufwenden kann, müsssen soviele Münzen
-                            verwendet werden, bis der notwendige Betrag überschritten wird. Den überschuss wird als Rückgeld zurückgegeben. Dabei ist das Rückgeld eine neue Bitcoin Münze.
-                        </p>
-                        <p class="card-text">Bitte wählen Sie die Münzen mit denen bezahlt werden soll:</p>
-
-                        <div class=" row">
-                            <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction">
-                                <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px" />
-
-                                <figcaption>
-                                    {{utxo.amount}}
-                                </figcaption>
-                            </figure>
-                        </div>
-
-                        <div ng-if="(currentTransactionUtxos.length) > 0">
-                            <p class="card-text">
-                               Die Transaktion sieht wie folgt aus. Es gibt eine Liste von Eingangsmünzen und eine Liste von Empfänger mit dem entsprechende Betrag den diese erhalten.
-                               Hier ist zu beachten, dass das Rückgeld wieder an die gleiche Wallet Adresse zugesendet wird.
-
-                                <br/>
-                                <br/>
-                                Klicken Sie auf die Münzen um diese wieder aus der Liste zu entfernen.
-                            </p>
-
-                            <div class="row justify-content-md-center">
-
-                                <div class="col-2">
-                                    <figure  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos">
-                                        <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px"/>
-
-                                        <figcaption>
-                                            {{utxo.amount}}
-                                        </figcaption>
-                                    </figure>
-                                </div>
-
-                                <div class="col-2 align-self-center">
-                                    <img src="./wallet_demo/images/arrow.JPG" height="50px"/>
-                                </div>
-
-                                <div class="col-3">
-                                    <figure ng-if="(amount) > 0" class="text-center">
-                                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
-
-                                        <figcaption>
-                                            Wallet#{{toWallet.address}} erhält {{amount}}  bitcoins
-                                        </figcaption>
-                                    </figure>
-                                    <figure ng-if="(fee) > 0" class="text-center" data-toggle="tooltip" data-placement="right" title="Der Miner erhält für seien Arbeit einen Fee als Reward">
-                                        <img src="./wallet_demo/images/minerIcon.jpg" height="50px" width="50px"/>
-
-                                        <figcaption>
-                                            Miner verdient {{fee}} bitcoins als Verarbeitungskosten
-                                        </figcaption>
-                                    </figure>
-
-                                    <figure ng-if="(currentTransactionAmount - amount - fee) > 1" class="text-center" data-toggle="tooltip" data-placement="right" title="Dem Absender wird der Überschuss als Rückgeld zurückgegeben">
-                                        <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
-
-                                        <figcaption>
-                                            Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}  bitcoins
-                                        </figcaption>
-                                    </figure>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <button class="row" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)">send Transaction</button>
-                    </div>
-                </div>
-            </article>
-
-            <nav class="col-2">Menu</nav>
+            <nav class="col-2">
+                <ul class="menu">
+                    <li><a href="#!/view1">view1</a></li>
+                    <li><a href="#!/view2">view2</a></li>
+                </ul>
+            </nav>
 
 
         </div>
