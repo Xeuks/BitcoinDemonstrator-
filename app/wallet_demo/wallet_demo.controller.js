@@ -9,19 +9,19 @@ angular
     }])
 
     .filter('sumUtxos', function() {
-        return function(data) {
-            if (typeof(data) === 'undefined' || data.length === 0) {
+        return function(wallet) {
+            if (typeof(wallet) === 'undefined' || typeof(wallet.utxos) === 'undefined' || wallet.utxos.length === 0) {
                 return 0;
             }
 
-            var sum = data.reduce(function(total, utxo) { return {amount: total.amount+utxo.amount};});
+            var sum = wallet.utxos.reduce(function(total, utxo) { return {amount: total.amount+utxo.amount};});
 
             return sum.amount;
         };
     })
     .controller('WalletDemoController', ['$scope', 'bitcoinNetwork', function($scope, bitcoinNetwork) {
 
-        $scope.wallets = bitcoinNetwork.getWallets();
+        $scope.wallets =  [].concat(bitcoinNetwork.getWallets()).concat(bitcoinNetwork.getMiners());
 
         $scope.currentWallet = $scope.wallets[0];
         $scope.toWallet = $scope.wallets[1];
@@ -49,7 +49,7 @@ angular
             }
 
             $scope.currentTransactionUtxos.push(utxo);
-        }
+        };
 
         $scope.removeFromTransaction = function(utxo) {
             $scope.currentTransactionAmount -= utxo.amount;
@@ -70,20 +70,12 @@ angular
         };
 
         $scope.sendTransaction = function() {
-            var transaction = {
-                from: $scope.currentWallet.address,
-                to: [
-                    { address: $scope.toWallet.address, amount: $scope.amount},
-                ],
-                utxos: $scope.currentTransactionUtxos
-            };
 
-            var chargeBack = $scope.currentTransactionAmount - $scope.amount - $scope.fee;
+            var transaction = bitcoinNetwork.createTransaction(
+                $scope.currentWallet, $scope.toWallet, $scope.amount,
+                $scope.fee, $scope.currentTransactionUtxos
+            );
 
-            if(chargeBack > 0)
-            {
-                transaction.to.push({ address: $scope.currentWallet.address, amount: chargeBack});
-            }
 
             bitcoinNetwork.propagateTransaction(transaction);
         };

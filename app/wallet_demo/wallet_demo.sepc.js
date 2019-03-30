@@ -3,7 +3,9 @@
 describe("test wallet demo controller", function(){
 
     beforeEach(module("myApp"));
-    var transaction = {};
+
+    var createTransactionCalled = false;
+    var propagateTransactionCalled = false;
 
     var bitcoinNetwork = {
         getWallets: function() {
@@ -19,8 +21,14 @@ describe("test wallet demo controller", function(){
             ];
         },
 
-        propagateTransaction: function(tx) {
-            transaction = tx;
+        getMiners: function() { return []; },
+
+        createTransaction: function () {
+            createTransactionCalled = true;
+        },
+
+        propagateTransaction: function () {
+            propagateTransactionCalled = true;
         }
     };
 
@@ -86,8 +94,8 @@ describe("test wallet demo controller", function(){
 
     describe("removeFromTransaction()", function(){
         var $scope, controller;
-        var utxo = {amount: 5, $$hashKey:1};
-
+        var utxo1 = {amount: 5, $$hashKey:1};
+        var utxo2 = {amount: 4, $$hashKey:1};
 
         beforeEach(function() {
             $scope = $rootScope;
@@ -96,25 +104,39 @@ describe("test wallet demo controller", function(){
             $scope.amount = 3;
             $scope.fee = 1;
 
-            $scope.currentTransactionUtxos = [utxo];
-            $scope.currentTransactionAmount = 5;
+            $scope.currentTransactionUtxos = [utxo1,utxo2];
+            $scope.currentTransactionAmount = 9;
             $scope.isTransactionValid = true;
         });
 
 
         it('utxo removed from list', function() {
-            $scope.removeFromTransaction(utxo);
+            $scope.removeFromTransaction(utxo1);
+            $scope.removeFromTransaction(utxo2);
             expect($scope.currentTransactionUtxos.length).toEqual(0);
         });
 
+        it('utxo removed only the provided utxo', function() {
+            $scope.removeFromTransaction(utxo1);
+            expect($scope.currentTransactionUtxos.length).toEqual(1);
+            expect($scope.currentTransactionUtxos[0]).toEqual(utxo2);
+        });
+
         it('decreases amount', function() {
-            $scope.removeFromTransaction(utxo);
+            $scope.removeFromTransaction(utxo1);
+            $scope.removeFromTransaction(utxo2);
             expect($scope.currentTransactionAmount).toEqual(0);
         });
 
         it('is transaction invalided after remove', function() {
-            $scope.removeFromTransaction(utxo);
+            $scope.removeFromTransaction(utxo1);
+            $scope.removeFromTransaction(utxo2);
             expect($scope.isTransactionValid).toEqual(false);
+        });
+
+        it('is transaction still valided when enough utxo are spent', function() {
+            $scope.removeFromTransaction(utxo1);
+            expect($scope.isTransactionValid).toEqual(true);
         });
     });
 
@@ -145,58 +167,29 @@ describe("test wallet demo controller", function(){
 
     describe("sendTransaction()", function(){
         var $scope, controller;
-        var utxo1 = {amount: 5};
-
 
         beforeEach(function() {
             $scope = $rootScope;
             controller = $controller('WalletDemoController', { $scope: $scope, bitcoinNetwork: bitcoinNetwork});
 
+            createTransactionCalled = false;
+            propagateTransactionCalled = false;
 
-
-            $scope.amount =3;
-            $scope.fee =1;
-            $scope.currentTransactionAmount = 5;
-            $scope.currentTransactionUtxos = [utxo1];
         });
 
+        it('transaction created', function() {
+            $scope.sendTransaction();
+            expect(createTransactionCalled).toBeTruthy();
+        });
 
         it('transaction sent into bitcoin network', function() {
             $scope.sendTransaction();
-            expect(transaction.from).toEqual($scope.currentWallet.address);
-        });
-
-        it('transaction to receive address added', function() {
-            $scope.sendTransaction();
-            expect(transaction.to[0].address).toEqual($scope.toWallet.address);
-        });
-
-        it('change transaction added if more then amount is added', function() {
-            $scope.sendTransaction();
-            expect(transaction.to[1].address).toEqual($scope.currentWallet.address);
-            expect(transaction.to[1].amount).toEqual(1);
-
-        });
-
-        it('change transaction not if amount is just enough', function() {
-            $scope.amount =4;
-            $scope.fee =1;
-
-            $scope.sendTransaction();
-            expect(transaction.to.length).toEqual(1);
-        });
-
-        it('enough fee is paid in transaction', function() {
-            $scope.amount =4;
-            $scope.fee =1;
-
-            $scope.sendTransaction();
-            expect($scope.currentTransactionAmount -  transaction.to[0].amount).toEqual(1);
+            expect(propagateTransactionCalled).toBeTruthy();
         });
     });
 
     describe('sum utxos filter', function() {
-        var utxos = [{amount: 5},{amount: 5}]
+        var wallet = {utxos:[{amount: 5},{amount: 5}]};
         var $filter;
 
         beforeEach(inject(function(_$filter_){
@@ -205,12 +198,17 @@ describe("test wallet demo controller", function(){
 
         it('utxos amounts are summed', function() {
             var sumUtxo = $filter('sumUtxos');
-            expect(sumUtxo(utxos)).toEqual(10);
+            expect(sumUtxo(wallet)).toEqual(10);
         });
 
         it('return 0 if utxos list is empty', function() {
             var sumUtxo = $filter('sumUtxos');
-            expect(sumUtxo([])).toEqual(0);
+            expect(sumUtxo({utxos:[]})).toEqual(0);
+        });
+
+        it('return 0 if wallet is not passed', function() {
+            var sumUtxo = $filter('sumUtxos');
+            expect(sumUtxo()).toEqual(0);
         });
     });
 

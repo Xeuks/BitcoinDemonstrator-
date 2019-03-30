@@ -24,7 +24,7 @@
 
     <div class="row justify-content-md-center">
         <figure class="walletFigure col-auto text-center">
-            <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
+            <img src="./images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
             <figcaption>
                 Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
             </figcaption>
@@ -33,7 +33,7 @@
         <div class="col-auto"><img  src="./wallet_demo/images/transactionSend.jpg" height="60px" width="120px"/></div>
 
         <figure class="walletFigure col-auto text-center">
-            <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
+            <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
             <figcaption>
                 Wallet#<select name="txToWallet" ng-options="wallet.address for wallet in wallets | filter:{ address: '!'+currentWallet.address }" ng-model="toWallet"></select>
@@ -63,26 +63,26 @@
                 <div class="form-group">
                     <label for="txAmount">Betrag:</label>
                     <div class="input-group">
-                        <input aria-describedby="amountHelp" class="form-control" id="txAmount" ng-model="amount" type="number" min="1" max="{{(currentWallet.utxos|sumUtxos) - fee}}" required>
+                        <input aria-describedby="amountHelp" class="form-control" id="txAmount" ng-model="amount" type="number" min="1" max="{{(currentWallet|sumUtxos) - fee}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                   <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px" />
+                                   <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </span>
                         </div>
 
                     </div>
-                    <small id="amountHelp" class="form-text text-muted">Betrag zwischen 1 und {{(currentWallet.utxos|sumUtxos) - fee }} angeben</small>
+                    <small id="amountHelp" class="form-text text-muted">Betrag zwischen 1 und {{(currentWallet|sumUtxos) - fee }} angeben</small>
 
                     <label for="txFee">Fee:</label>
                     <div class="input-group">
-                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" type="number" min="1" max="{{(currentWallet.utxos|sumUtxos) - amount}}" required>
+                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" type="number" min="1" max="{{(currentWallet|sumUtxos) - amount}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
-                                   <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px" />
+                                   <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </span>
                         </div>
                     </div>
-                    <small id="feeHelp" class="form-text text-muted">Fee zwischen 1 und {{(currentWallet.utxos|sumUtxos) - amount }} angeben</small>
+                    <small id="feeHelp" class="form-text text-muted">Fee zwischen 1 und {{(currentWallet|sumUtxos) - amount }} angeben</small>
                 </div>
             </form>
         </div>
@@ -110,7 +110,7 @@
 
             <div class=" row">
                 <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction">
-                    <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px" />
+                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
 
                     <figcaption>
                         {{utxo.amount}}
@@ -132,7 +132,7 @@
 
                     <div class="col-2">
                         <figure  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos">
-                            <img src="./wallet_demo/images/BC_Logo.png" height="20px" width="20px"/>
+                            <img src="./images/BC_Logo.png" height="20px" width="20px"/>
 
                             <figcaption>
                                 {{utxo.amount}}
@@ -146,14 +146,14 @@
 
                     <div class="col-3">
                         <figure ng-if="(amount) > 0" class="text-center">
-                            <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
+                            <img src="./images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
 
                             <figcaption>
                                 Wallet#{{toWallet.address}} erhält {{amount}}  bitcoins
                             </figcaption>
                         </figure>
                         <figure ng-if="(fee) > 0" class="text-center" data-toggle="tooltip" data-placement="right" title="Der Miner erhält für seien Arbeit einen Fee als Reward">
-                            <img src="./wallet_demo/images/minerIcon.jpg" height="50px" width="50px"/>
+                            <img src="./images/minerIcon.jpg" height="50px" width="50px"/>
 
                             <figcaption>
                                 Miner verdient {{fee}} bitcoins als Verarbeitungskosten
@@ -161,7 +161,7 @@
                         </figure>
 
                         <figure ng-if="(currentTransactionAmount - amount - fee) > 1" class="text-center" data-toggle="tooltip" data-placement="right" title="Dem Absender wird der Überschuss als Rückgeld zurückgegeben">
-                            <img src="./wallet_demo/images/walletIcon.png" height="50px" width="50px"/>
+                            <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
                             <figcaption>
                                 Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}  bitcoins
@@ -172,7 +172,7 @@
             </div>
 
 
-            <button class="row" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)">send Transaction</button>
+            <button class="row" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
         </div>
     </div>
 </article>
