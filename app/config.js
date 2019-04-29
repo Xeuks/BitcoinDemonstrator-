@@ -1,41 +1,33 @@
 'use strict';
 
 angular
-	.module('myApp').config( function($locationProvider, $routeProvider, bitcoinNetworkProvider) {
+	.module('myApp')
+	.config( function($locationProvider, $routeProvider, bitcoinNetworkProvider) {
 
-
-
-		var miners = [];
-
-
-		var w1 = bitcoinNetworkProvider.createWallet(1, [
+		var w1 = bitcoinNetworkProvider.createWallet([
 			{amount: 20},
 			{amount: 15},
 			{amount: 5}
 		]);
 
-		var w2 = bitcoinNetworkProvider.createWallet(2, [
+		var w2 = bitcoinNetworkProvider.createWallet( [
 			{amount: 10}
 		]);
 
+		var m1 = bitcoinNetworkProvider.createMiner([
+			{amount: 50	}
+		]);
 
-		var genesisBlock = {
-			transactions: [
-				{ from: 0, to: 1, Amount: 20},{ from: 0, to: 1, Amount: 15},{ from: 0, to: 1, Amount: 5},
-				{ from: 0, to: 2, Amount: 10}
-			],
-			PoWAnswer:0,
-			PoWChallange:0,
-			parentBlock:0,
-			siblings:[]
-		};
+		var m2 = bitcoinNetworkProvider.createMiner([
+			{amount: 20}
+		]);
 
+		var m3 = bitcoinNetworkProvider.createMiner([
+			{amount: 5}
+		]);
 
-		bitcoinNetworkProvider.createBitcoinNetwork(genesisBlock, [w1,w2], miners);
-
-
+		bitcoinNetworkProvider.createBitcoinNetwork([w1,w2], [m1,m2,m3]);
 
         $locationProvider.hashPrefix('!');
-
-        $routeProvider.otherwise({redirectTo: '/wallet_demo'});
+        $routeProvider.otherwise({redirectTo: '/miner_demo'});
 	});
