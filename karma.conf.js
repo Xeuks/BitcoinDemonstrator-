@@ -9,6 +9,7 @@ module.exports = function(config) {
       'lib/angular/angular.js',
       'lib/angular-route/angular-route.js',
       '../node_modules/angular-mocks/angular-mocks.js',
+      '../node_modules/js-sha256/src/sha256.js',
       'app.js',
       '*/*.js',
 
