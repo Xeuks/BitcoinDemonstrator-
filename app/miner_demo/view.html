@@ -1,0 +1,342 @@
+<article ng-controller="MinerDemoController">
+    <h2>Miner </h2>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Beschreibung</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">In dieser Demo wird aufgezeigt wie eine Transaktion in ein Block integriert wird.</p>
+
+            <p class="card-text">
+
+            </p>
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Mempool</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">Validation aufname in Mempool</p>
+
+            <figure class="col-auto text-center">
+                <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
+                <figcaption>
+                    Miner#<select ng-model="currentMiner" ng-options="miner.address for miner in miners " ></select>
+                </figcaption>
+            </figure>
+
+
+            <div class="container" style="padding:10px 10px;">
+                <h4>Mempool vom Miner {{currentMiner.address}}</h4>
+                <table class="table table-bordered" id="tbl_mempool">
+                    <thead>
+                    <tr>
+
+                        <th>Von</th>
+                        <th>An</th>
+                        <th>Betrag</th>
+                        <th>Fee</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl_posts_body">
+                        <tr ng-repeat="transaction in currentMiner.mempool track by $index">
+                            <td>{{transaction.from}}</td>
+                            <td>{{transaction.to}}</td>
+                            <td>{{transaction.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                            <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
+                            <td>
+                                <button type="button" class="btn btn-outline-secondary" ng-click="removeFromMempool($index)">Entfernen</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class=" btn btn-outline-secondary float-right" ng-click="generateTransaction(currentMiner)">Zufällige Transaktionen generieren</button>
+                <button type="button" class=" btn btn-outline-secondary float-right" ng-click="generateTransactionForAllMiners()">Für alle Miner Transaktionen generieren.</button>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Coinbase Transaktion</h5>
+        </div>
+        <div class="card-body">
+
+
+            <p class="card-text">
+                Der Miner fügt noch ein spezielle Transaktion hinzug und zwar die sogenannte
+                Coinbase Transaktion. Für den Mining-Arbeit, die vom Miner erbracht wird, erhält er eine Belohnung und zwar
+                die Fees, die in der Transaktion bezahlt wird. Zusätzlich kann er sich einen Reward für die Blockerstellung
+                zu schreiben.
+
+
+                Ausgeben nach TODO confirmations
+                <table class="table table-bordered" id="tbl_coinbase">
+                    <thead>
+                    <tr>
+                        <th>An</th>
+                        <th>Reward + Fees</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl_coinbase_body">
+                    <tr>
+                        <td>
+                            <figure class="col-auto">
+                                <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
+                                <figcaption>
+                                    Miner#{{currentMiner.address}}
+                                </figcaption>
+                            </figure>
+                        </td>
+                        <td>{{getCoinbaseReward(currentMiner.mempool); }} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </p>
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Candidate Block & Block erstellung</h5>
+        </div>
+        <div class="card-body">
+
+            <p class="card-text">
+                erste transaktion coinbase
+
+                Ein Miner kann nun die Transaktionen aus seinem Mempool herausnehmen und daraus ein Block generieren.
+                Dabei kann er frei wählen welche Transaktionen er auswählt
+
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Text:</span>
+                    </div>
+                    <input class="form-control" type="text" id="txHashText" ng-model="hashText">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Hash:</span>
+                    </div>
+                    <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
+                </div>
+            </p>
+
+            <p class="card-text">
+                Coinbase tx auswahl
+
+                pow
+                jede 10 min -> wie? retargetting
+
+
+
+
+            </p>
+
+            <div class="col-8 offset-md-2 border border-dark" style="margin-bottom: 20px;">
+                <div class="row justify-content-md-center">
+                    Canidate Block
+                </div>
+                <div class="row border-top">
+                    <div class="container">
+                        <div class="row justify-content-md-center">
+                            <div class="col-2">Coinbase</div>
+                            <div class="col-2">
+                                <img  src="./images/transactionSend.jpg" height="30px" width="80px" />
+                            </div>
+                            <div class="col-2">{{currentMiner.address}}</div>
+                        </div>
+                        <div ng-repeat="transaction in currentMiner.mempool">
+                            <div class="row justify-content-md-center">
+                                <div class="col-2">{{transaction.from}}</div>
+                                <div class="col-2">
+                                    <img  src="./images/transactionSend.jpg" height="30px" width="80px"/>
+                                </div>
+                                <div class="col-2">{{transaction.to}}</div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-md-center">Nonce {{currentMiner.candidateBlock.nonce}}</div>
+                    </div>
+                </div>
+                <div class="row border-top justify-content-md-center">
+                    Hash: {{currentMiner.candidateBlock.hash}}
+                </div>
+            </div>
+
+            <p class="alert alert-success" role="alert" ng-if="validBlockFound">
+                Herzlichen Glückwunsch ein gültiger Block wurde gemined.
+            </p>
+
+            <p class="alert alert-warning" role="alert" ng-if="currentMiner.mempool.length === 0">
+                Bitte Transaktionen für alle Miner generieren damit Mining gestartet werden kann.
+            </p>
+
+            <div>
+
+                <button type="button" class=" btn btn-outline-secondary float-right" ng-disabled="mempool[currentMiner.address].length === 0" ng-click="startToMineBlock()">Mining starten</button>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Mining Competition erstellung</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text row"></p>
+
+            <div class="row">
+                <div ng-repeat="miner in miners" class="container" >
+
+                    <p  class="row">
+                        <div ng-class="{'border-success':  candidateBlocks[miner.address].isValid}" class="border input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Canidate Block vom Miner {{miner.address}}:</span>
+                            </div>
+                            <input class="form-control" type="text" id="" placeholder="{{candidateBlocks[miner.address].hash}}">
+                        </div>
+
+
+
+                    </p>
+
+                </div>
+            </div>
+
+
+            <div class="row align-items-center justify-content-md-center">
+
+
+
+                <div >
+                    <img src="./images/block.png"/>
+                </div>
+                <div >
+                    <img src="./images/chain.jpg"/>
+                </div>
+                <div >
+                    <img src="./images/block.png"/>
+                </div>
+
+                <div >
+                    <div class="align-items-center">
+                        <div >
+                            <img src="./images/chain.jpg"/>
+                            <img src="./images/block.png"/>
+                            <span ng-if="forkResolved">
+                                <img src="./images/chain.jpg"/>
+                                <img src="./images/block.png"/>
+                                 <span class="alert alert-info" role="alert">
+                                    Gewinner
+                                </span>
+                            </span>
+                            <span ng-if="isMiningInProgress();">
+                                <span class="spinner-grow text-info" role="status" aria-hidden="true"></span>
+                                Mining
+                            </span>
+                        </div>
+
+                    </div>
+                    <div class="align-items-center"  ng-if="forkOccured === true || forkResolved === true">
+                        <div >
+                            <img src="./images/chain.jpg"/>
+                            <img src="./images/block.png"/>
+                            <span ng-if="isMiningInProgress();">
+                                <span class="spinner-grow text-info" role="status" aria-hidden="true"></span>
+                                Mining
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+             </div>
+
+            <div class="container">
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a onclick="return false;" class="nav-link " data-toggle="tab" href="#mining">Mining Competition</a>
+                    </li>
+                    <li class="nav-item">
+                        <a onclick="return false;" class="nav-link" data-toggle="tab" href="#fork">Forks</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div id="mining" class="container tab-pane active"><br>
+                        <h3>Mining Competition</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+
+
+                        <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
+                            Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
+                        </p>
+
+                        <button type="button" class=" btn btn-outline-secondary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(1)">Mining starten</button>
+
+                    </div>
+                    <div id="fork" class="container tab-pane fade"><br>
+                        <h3>Forks</h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+
+
+                        <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
+                            Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
+                        </p>
+
+                        <button type="button" class=" btn btn-outline-secondary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(2)">Mining starten</button>
+                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(1)">Fork auflösen</button>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>PoW Retargeting</h5>
+        </div>
+        <div class="card-body">
+
+            <p class="card-text">
+
+            </p>
+
+            <form>
+                <div class="form-group">
+                    <label for="formControlRange">Mining PoW Difficulty  {{difficulty}}</label>
+                    <input type="range" min="1" max="64" class="form-control-range" ng-model="difficulty" id="formControlRange">
+                </div>
+
+                <div class="form-group">
+                    <label for="formControlRange">HashRate</label>
+                    <input type="number" min="1" max="100" ng-model="hashRate" id="hashRate">
+                </div>
+
+                <div>
+                    {{}}
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+
+
+
+</article>
