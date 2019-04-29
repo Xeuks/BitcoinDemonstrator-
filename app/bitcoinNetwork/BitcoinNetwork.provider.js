@@ -1,30 +1,47 @@
-'use strict';
-
+'use strict'
 angular
     .module('myApp').provider("bitcoinNetwork", function() {
-    var bcNetwork;
+        var bcNetwork;
+        var curAddress = 1;
 
-    this.createWallet = function(address, utxos) { return new Wallet(address, utxos); };
+        this.createMiner = function(utxos) {
+            return  new Miner(curAddress++, utxos);
+        };
 
-    this.createBitcoinNetwork = function(genesisBlock, wallets, miners) {
-        bcNetwork = new BitcoinNetwork(genesisBlock, wallets, miners);
-    };
+        this.createWallet = function(utxos) {
+            return new Wallet(curAddress++, utxos);
+        };
 
-    this.$get = function() {
+        this.createBitcoinNetwork = function(wallets, miners) {
+            var gensisTransactions = [];
+            //TODO miners
+            wallets.forEach(function(wallet) {
+                wallet.utxos.forEach(function (utxo) {
+                    gensisTransactions.push({from: 0, to: wallet.address, amount: utxo.amount});
+                });
+            });
 
-        return bcNetwork;
-    };
-});
+            var genesisBlock = new Block(0, gensisTransactions, 0 , "gensisBlock");
+            genesisBlock.calculateNextHash();
+
+            bcNetwork = new BitcoinNetwork(genesisBlock, wallets, miners);
+        };
+
+        this.$get = function() {
+
+            return bcNetwork;
+        };
+    });
 
 
 function BitcoinNetwork(genesisBlock, wallets, miners) {
-    this.blockchain = genesisBlock;
+    this.blockchain = [].push(genesisBlock);
 
     this.wallets = wallets;
 
     this.miners = miners;
 
-    this.difficulty = 0;
+    this.difficulty = 1;
 
 
     this.listeners = [];
@@ -47,57 +64,141 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
     };
 
     this.propagateBlock = function (block) {
-        this.listeners.forEach(function (node) {
+        var subscribers = this.listeners
+            .concat(this.miners)
+            .concat(this.wallets);
+
+        subscribers.forEach(function (node) {
             if (typeof node.onNewBlock === 'function')
                 node.onNewBlock(block);
         });
+
+        this.blockchain.push(block);
     };
 
     this.propagateTransaction = function (transaction) {
-        this.listeners.forEach(function (node) {
-            if (typeof node.onNewTransaction === 'function')
+        var subscribers = this.listeners
+            .concat(this.miners)
+            .concat(this.wallets);
+
+        subscribers.forEach(function (node) {
+            if (typeof(node.onNewTransaction) === 'function')
                 node.onNewTransaction(transaction);
         });
     };
 
+    this.createTransaction = function(fromWallet, toWallet, amount, fee, utxos) {
+        return new Transaction(fromWallet, toWallet, amount, fee, utxos);
+    };
+
+    this.createBlock = function (miner, transactions, parentHash) {
+        return new Block(miner, transactions, this.difficulty ,parentHash);
+    };
 }
 
-function Block() {
-    //miner:1,
-    //transactions:[{},{},...]
-    //hash
-    //difficulty
-    //parentBlock:null,
-    //siblings:[]
+function Block(minedBy, transactions, difficulty) {
+    this.minedBy = minedBy;
+    this.transactions = transactions;
+    this.difficulty = difficulty;
+    this.nonce = 0;
+    this.hash = "";
+
+    this.calculateNextHash = function() {
+        this.nonce++;
+        this.hash =  sha256(this.toString());
+
+        return this.hash;
+    };
+
+    this.isValid = function() {
+        return this.hash.startsWith(difficulty);
+    }
+
+    this.toString = function() {
+        var stringRepresentation =
+            String(this.minedBy) + String(this.nonce);
+
+        this.transactions.forEach(function (transaction) {
+            stringRepresentation = stringRepresentation + transaction.toString();
+        });
+
+        return stringRepresentation;
+    };
 }
 
 function Wallet(address, utxos) {
     this.address = address;
     this.utxos = utxos;
+}
+
+function Miner(address, utxos) {
+    this.address = address;
+    this.utxos = utxos;
+    this.mempool = [];
+
+    this.candidateBlock = null;
 
     this.onNewTransaction = function (transaction) {
+        this.mempool.push(transaction);
+    };
+
+    this.createCandidateBlock = function(difficulty) {
+        var reward = 10;
+        this.mempool.forEach(function (transaction) {
+            reward += transaction.fee;
+        });
+
+        var coinbaseTx = new Transaction(0, this.address, reward, 0, [{amount: reward}]);
+        var transactions = [coinbaseTx].concat( this.mempool);
+
+
+        this.candidateBlock = new Block(this.address, transactions, difficulty);
     };
 }
 
-function Miner() {
-    //address
-    //utxo
-    //mempool
+function Transaction(fromWallet, toWallet, amount, fee, utxos) {
+    this.from = fromWallet.address;
+    this.to = toWallet.address;
+    this.amount = amount;
+    this.fee = fee;
+    this.change = 0;
 
-    this.onNewTransaction = function (transaction) {
+    var curTxAmount = 0;
+
+    if(typeof(utxos) === 'undefined')
+    {
+        var utxosList = [];
+
+        for(var idx = 0; curTxAmount < amount && idx < fromWallet.utxos.length; idx++)
+        {
+            curTxAmount += fromWallet.utxos[idx].amount;
+            utxosList.push(fromWallet.utxos[idx]);
+        }
+
+
+        if(curTxAmount < amount)
+        {
+            throw new Error('Transaction could not be build because wallet has not enough bitcoins!');
+        }
+        else
+        {
+            this.utxos = utxosList;
+        }
+    }
+    else
+    {
+        utxos.forEach(function(utxo){ curTxAmount += utxo.amount; });
+        this.utxos = utxos;
+    }
+
+    var change = curTxAmount - amount - fee;
+
+    if(change > 0)
+    {
+        this.change = change;
+    }
+
+    this.toString = function() {
+        return String(this.from) + String(this.to) + String(this.amount) + String(this.fee);
     };
-    this.onNewBlock = function (block) {
-    };
-
-    //mine
 }
-
-function Transaction() {
-    this.from = 0;
-    this.to = 0;
-    this.amount = 0;
-}
-
-
-//zerst hash mit einem 0 wenn miner hinzugefügt
-//
