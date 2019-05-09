@@ -35,5 +35,5 @@ angular
 
 
         $locationProvider.hashPrefix('!');
-        $routeProvider.otherwise({redirectTo: '/blockchain_demo'});
+        $routeProvider.otherwise({redirectTo: '/startpage'});
 	});
