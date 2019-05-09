@@ -14,10 +14,14 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
 
 
     this.onNewBlock = function(block) {
-
+        this.startAnimation(block.minedBy, "./images/block.jpg");
     };
 
     this.onNewTransaction = function(transaction) {
+        this.startAnimation(transaction.from, "./images/transaction.jpg");
+    };
+
+    this.startAnimation = function(initAddress, image) {
 
         var sentToNeighborNode = [];
 
@@ -38,15 +42,19 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                      return neighborNode.id() === visitedNode;
                  });
 
-                 console.log(sourceNode, neighborNode.id(), alreadyVisited);
-
                  if(alreadyVisited === undefined){
 
                     var neighborNodeId = neighborNode.id();
-                    var tmpId = "tmp" + neighborNodeId + sourceNode + transaction.from;
+                    var tmpId = "tmp" + neighborNodeId + sourceNode + initAddress;
 
                     var pos = $scope.cy.$(nodeId).position();
                     $scope.cy.add({ group: 'nodes', data: { id: tmpId  }, position: {x:pos.x, y: pos.y}});
+
+                     $scope.cy.$("#"+tmpId).forEach(function(node) {
+                         node.style("background-image", image);
+                         node.style("background-fit", "contain");
+                         node.style("shape", "rectangle");
+                     });
 
                     $scope.cy.$('#' + tmpId).animate({
                         position: neighborNode.position(),
@@ -61,14 +69,11 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                     });
 
                     sentToNeighborNode[sourceNode].push(neighborNodeId);
-
                  }
-
-
             });
         };
 
-        animatePropagation(this.idMapping[transaction.from]);
+        animatePropagation(this.idMapping[initAddress]);
     };
 
     $scope.cy = cytoscape({
