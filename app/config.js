@@ -6,8 +6,8 @@ angular
 
 		var w1 = bitcoinNetworkProvider.createWallet([
 			{amount: 20},
-			{amount: 15},
-			{amount: 5}
+			{amount: 10},
+			{amount: 5},
 		]);
 
 		var w2 = bitcoinNetworkProvider.createWallet( [
@@ -28,6 +28,12 @@ angular
 
 		bitcoinNetworkProvider.createBitcoinNetwork([w1,w2], [m1,m2,m3]);
 
+		var blockchainNetwork = bitcoinNetworkProvider.$get();
+
+
+		//blockchainNetwork
+
+
         $locationProvider.hashPrefix('!');
-        $routeProvider.otherwise({redirectTo: '/miner_demo'});
+        $routeProvider.otherwise({redirectTo: '/blockchain_demo'});
 	});

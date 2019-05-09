@@ -47,7 +47,7 @@
         </div>
         <div class="card-body">
             <div class="alert alert-info" role="alert">
-                Wallet {{currentWallet.address}} besitzt ein Guthaben von {{(currentWallet.utxos|sumUtxos)}} Bitcoins.
+                Wallet {{currentWallet.address}} besitzt ein Guthaben von {{(currentWallet|sumUtxos)}} Bitcoins.
             </div>
 
             <p class="card-text">
@@ -55,7 +55,7 @@
                 zur Verfügung gestellt, in der er angeben kann, wie viel er dem Empfänger zusenden will. Jede Transaktion hat gewisse Transaktionsgebühren, diese können auch
                 vom Walletbesitzer eingestellt werden. Je mehr Gebühren der Benutzer zu zahlen bereit ist, desto schneller wird die Transaktion verarbeitet.
 
-                Zu diesem Thema wird in <b>TODO</b> näher eingegangen.
+                Zu diesem Thema wird im Kapitel <b>TODO</b> mehr erläutert.
             </p>
             <p class="card-text">Bitte geben Sie einen Betrag und die Gebühren ein:</p>
 
@@ -172,6 +172,13 @@
 
 
             <button class="row" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
+
+
+
+
+
+
         </div>
     </div>
+
 </article>

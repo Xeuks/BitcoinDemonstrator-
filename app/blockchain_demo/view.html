@@ -1,5 +1,206 @@
-<p>This is the partial for view 2.</p>
-<p>
-    Showing of 'interpolate' filter:
+<article ng-controller="MinerDemoController">
+    <h2>Blockchain </h2>
 
-</p>
+    <div class="card row">
+        <div class="card-header">
+            <h5>Beschreibung</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">
+                Diese Webseite demonstriert die Wichtigsten Konzepte der Bitcoin Technologie. Dabei kann der Benutzer die
+                Konzepte in den einzelnen Seiten erforschen.
+
+                In dieser Demo werden die grundlegenden Informationen zu der Blockchain-Technologie aufgezeigt.
+                Weiterhin wird beschrieben, wie die Bitcoin Blockchain aufgebaut ist und was sie beinhaltet
+            </p>
+
+            <p class="card-text">
+
+            </p>
+        </div>
+    </div>
+
+
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Blockchain Browser & Blockinhalt</h5>
+        </div>
+        <div class="card-body">
+
+            <p>
+                Hier können Sie erforschen, was der Inhalt eines Blockes ist. Im Bitcoin System werden die Transaktionen
+                die zwischen den Wallets geschen in den Blöcken abgelegt. Dabei werden die Blöcke durch die sogenannten Miners
+                erstellt. Mehr zu den Miner erfahren Sie in der Demo <b>TODO</b>.
+            </p>
+
+            <h6>Block # {{getBlockHeight(currentBlock)}}</h6>
+            <p>
+                Bitte wählen Sie ein Block aus: <select ng-change="setWalletsState(currentBlock);" ng-model="currentBlock" ng-options="block.hash for block in blockchain" ></select>
+            </p>
+
+            <h6>Block Informationen</h6>
+            <table class="table table-bordered" id="tbl_blocksummary">
+                <tbody id="tbl_blocksummary_body">
+                    <tr>
+                         <td>
+                             Erstellt durch Miner:
+                         </td>
+                        <td>
+                            {{currentBlock.minedBy}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                           Nonce:
+                        </td>
+                        <td>
+                            {{currentBlock.nonce}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Hash:
+                        </td>
+                        <td>
+                            {{currentBlock.hash}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Erhaltener Reward:
+                        </td>
+                        <td>
+                            {{getBlockReward(currentBlock)}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Vorheriger Block:
+                        </td>
+                        <td>
+                            {{getPreviousBlockHash(currentBlock)}}
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Eine Transaktion setzt sich aus einem Sender, Empfänger und dem Betrag der Übermittelt wird zusammen.
+                Weiterhin werden sogenannte UTXO angegeben, die der Sender übermittelt. UTXOs sind die Bitcoin Münzen mit
+                denen man zahlt.
+            </p>
+            <p>
+                Weiter Details zu den Transaktione, UTXOs und Wallets erfahren Sie in der Demo <b>TODO</b>.
+            </p>
+
+            <p>
+                <h6>Transaktionen</h6>
+                <table class="table table-bordered" id="tbl_transactions">
+                    <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Betrag</th>
+                        <th>Fee</th>
+                        <th>UTXOS</th>
+                        <th>Empfänger</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl_transactions_body">
+                    <tr  ng-repeat="transaction in currentBlock.transactions">
+                        <td>{{transaction.from}}</td>
+                        <td><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+
+                        <td >
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in transaction.utxos">
+                              {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
+                            </div>
+                        </td>
+                        <td>{{transaction.to}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </p>
+
+            <p>
+                Hier wird der aktuelle Guthaben aller Wallets aufgezeigt. Es ist anzumerken, dass der Kontostand der Wallets
+                nicht in den Blöcken erfasst wird. Der Kontostand eines Wallets muss anhand aller Transaktionen, die
+                vom Genesis Block bis zum aktuellen Block ausgeführt wurden berechnet werden.
+            </p>
+
+            <p>
+                <h6>Stand der Wallets</h6>
+                <table class="table table-bordered" id="tbl_transactions">
+                    <thead>
+                    <tr>
+                        <th>Addresse</th>
+                        <th>Guthaben</th>
+                        <th>Vorhandene UTXOS</th>
+                        <th>Erhaltene UTXOS</th>
+                        <th>Ausgegebene UTXOS</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbl_transactions_body">
+                    <tr  ng-repeat="state in walletStates">
+                        <td>{{state.address}}</td>
+                        <td><div style="width:50px;display:inline;">{{state.balance}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td >
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.utxos">
+                                {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
+                            </div>
+                        </td>
+
+                        <td >
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.receivedUtxos">
+                                {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
+                            </div>
+                        </td>
+
+                        <td >
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.spentUtxos">
+                                {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
+                            </div>
+                        </td>
+
+                    </tr>
+                    </tbody>
+                </table>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5>Merkle Tree</h5>
+        </div>
+        <!--div class="card-body">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="{{getHash(text12Hash+text34Hash)}}" >
+            </div>
+            <div class="input-group mb-3">
+                <input ng-model="text12Hash" type="text" class="form-control" placeholder="{{getHash(text1Hash+text2Hash)}}" >
+                <input ng-model="text34Hash" type="text" class="form-control" placeholder="{{getHash(text3Hash+text4Hash)}}" >
+            </div>
+            <div class="input-group mb-3">
+                <input class="form-control" type="text" placeholder="{{getHash(text1);}}" readonly>
+                <input ng-model="text2Hash" type="text" class="form-control" placeholder="{{getHash(text2)}}" >
+                <input ng-model="text3Hash" type="text" class="form-control" placeholder="{{getHash(text3)}}" >
+                <input ng-model="text4Hash" type="text" class="form-control" placeholder="{{getHash(text4)}}" >
+            </div>
+
+            <div class="input-group mb-3">
+                <input  type="text" class="form-control" placeholder="Username" ng-model="text1" >
+                <input ng-model="text2" type="text" class="form-control" placeholder="Username" >
+                <input ng-model="text3" type="text" class="form-control" placeholder="Username" >
+                <input ng-model="text4" type="text" class="form-control" placeholder="Username" >
+            </div>
+        </div-->
+    </div>
+
+
+
+
+</article>

@@ -35,7 +35,7 @@ angular
             return $scope.miners.every(function (miner) {
                 return miner.mempool.length > 0;
             });
-        }
+        };
 
         $scope.getUnUsedUTXOsinMinerMempool = function(wallet, miner){
             var unUsedUTXOs = [].concat(wallet.utxos);
@@ -56,14 +56,13 @@ angular
 
 
             return unUsedUTXOs;
-        }
+        };
 
         $scope.generateTransaction = function(miner) {
-
             $scope.wallets.forEach(function(wallet, index) {
                 var toIdx = $scope.getRandomValueBetween(0, $scope.wallets.length-1);
 
-                toIdx = (toIdx == index) ? ((toIdx + 1) % $scope.wallets.length) : toIdx;
+                toIdx = (toIdx === index) ? ((toIdx + 1) % $scope.wallets.length) : toIdx;
 
                 var unUsedUTXOs = $scope.getUnUsedUTXOsinMinerMempool(wallet, miner);
 
@@ -94,7 +93,7 @@ angular
 
         $scope.getHash = function(value) {
             return sha256(value);
-        }
+        };
 
         $scope.startToMineBlock = function(){
             if ( $scope.isMiningInProgress() ) return;
@@ -127,7 +126,7 @@ angular
 
         $scope.isMiningInProgress = function(){
             return angular.isDefined(miningInterval);
-        }
+        };
 
         $scope.startToMiningCompetition = function(numRequiredValidBlocks) {
             if ( $scope.isMiningInProgress() ) return;
@@ -135,7 +134,7 @@ angular
             $scope.miningCompetitionFinished = false;
             $scope.candidateBlocks = [];
             $scope.miners.forEach(function(miner){
-                miner.createCandidateBlock("000")
+                miner.createCandidateBlock("000");
                 $scope.candidateBlocks[miner.address] = {block: miner.candidateBlock, hash:0, isValid: false};
             });
             $scope.dummyNonce = 0;
@@ -169,6 +168,10 @@ angular
                     $scope.candidateBlocks.forEach(function(candidateBlock){
                         candidateBlock.hash = candidateBlock.block.hash;
                         candidateBlock.isValid = candidateBlock.block.isValid();
+
+                        if(candidateBlock.isValid) {
+                            bitcoinNetwork.addBlockToBlockchain(candidateBlock.block);
+                        }
                     });
 
                     $scope.miners.forEach(function(miner) {
@@ -177,6 +180,8 @@ angular
                 }
             }, 10);
         };
+
+
 
         $scope.$on('$destroy', function() {
             $scope.stopToMineBlock();
