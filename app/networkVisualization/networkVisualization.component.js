@@ -78,7 +78,8 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                 { data: { id: 'b' } },
                 { data: { id: 'c' } },
                 { data: { id: 'd' } },
-                { data: { id: 'e' } }
+                { data: { id: 'e' } },
+
             ],
 
             edges: [
@@ -101,6 +102,9 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
         userPanningEnabled: false,
         boxSelectionEnabled: false,
     });
+
+    $scope.cy.nodes().ungrabify();
+
     var walletImg = "./images/walletIcon.png";
     var minerImg = "./images/minerIcon.jpg";
     var metaData = {
@@ -111,13 +115,12 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
         "e": {title:"miner3", img:minerImg}
     };
 
+
     $scope.cy.$("node").forEach(function(node) {
         node.style("content", metaData[node.id()].title);
         node.style("background-image", metaData[node.id()].img);
         node.style("background-fit", "contain");
         node.style("shape", "rectangle");
-
-
     });
 
 }
