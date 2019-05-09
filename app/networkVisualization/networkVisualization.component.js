@@ -38,21 +38,23 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                      return neighborNode.id() === visitedNode;
                  });
 
-                 if(!alreadyVisited){
+                 console.log(sourceNode, neighborNode.id(), alreadyVisited);
+
+                 if(alreadyVisited === undefined){
 
                     var neighborNodeId = neighborNode.id();
                     var tmpId = "tmp" + neighborNodeId + sourceNode + transaction.from;
 
                     var pos = $scope.cy.$(nodeId).position();
-                    $scope.cy.add({ group: 'nodes', data: { id: tmpId  }, position: {x:pos.x, y: pos.y}/*, style: {'background-color': '#666'}*/});
+                    $scope.cy.add({ group: 'nodes', data: { id: tmpId  }, position: {x:pos.x, y: pos.y}});
 
                     $scope.cy.$('#' + tmpId).animate({
                         position: neighborNode.position(),
                     }, {
-                        duration: 2000,
+                        duration: 1000,
                         complete : function() {
                             $scope.cy.$('#'+tmpId).remove();
-
+                            sentToNeighborNode[neighborNodeId].push(sourceNode);
                             animatePropagation(neighborNodeId);
 
                         }
