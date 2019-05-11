@@ -27,6 +27,10 @@ header {
     color: black;
 }
 
+.navbar a:hover {
+    border-bottom: 5px solid white;
+}
+
 .navbar a.active{
     color: white;
     border-bottom: 5px solid white;
