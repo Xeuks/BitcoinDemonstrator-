@@ -31,6 +31,18 @@
 
         <script>
             $(document).ready(function(){
+                var urlParts =  $(location).attr("href").split("#!");
+
+                if(urlParts.length === 2) {
+                    currentPage = "#!" + urlParts[1];
+                    $('.navbar a').each(function (idx, menuItem) {
+                        console.log(menuItem);
+                        if ($(menuItem).attr("href") === currentPage) {
+                            $(menuItem).addClass("active");
+                        }
+                    });
+                }
+
                 $('.navbar a').click(function(){
                     $('a').removeClass("active");
                     $(this).addClass("active");
@@ -48,7 +60,7 @@
 
             <div class="navbar navbar-expand-sm flex-grow-1 text-right" id="myNavbar">
                 <ul class="navbar-nav  ml-auto flex-nowrap">
-                    <li class="nav-item"><a class="nav-link m-2 menu-item active" href="#!/startpage">Startpage</a></li>
+                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/startpage">Startpage</a></li>
 
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/wallet_demo">Wallet & Transaktionen</a></li>
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/miner_demo">Mining und Konsens</a></li>
