@@ -48,13 +48,13 @@
                             <td>{{transaction.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                             <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
                             <td>
-                                <button type="button" class="btn btn-outline-secondary" ng-click="removeFromMempool($index)">Entfernen</button>
+                                <button type="button" class="btn btn-outline-primary" ng-click="removeFromMempool($index)">Entfernen</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-                <button type="button" class=" btn btn-outline-secondary float-right" ng-click="generateTransaction(currentMiner)">Zufällige Transaktionen generieren</button>
-                <button type="button" class=" btn btn-outline-secondary float-right" ng-click="generateTransactionForAllMiners()">Für alle Miner Transaktionen generieren.</button>
+                <button type="button" class=" btn btn-outline-primary" ng-click="generateTransaction(currentMiner)">Zufällige Transaktionen generieren</button>
+                <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Für alle Miner Transaktionen generieren.</button>
 
             </div>
         </div>
@@ -179,7 +179,7 @@
 
             <div>
 
-                <button type="button" class=" btn btn-outline-secondary float-right" ng-disabled="mempool[currentMiner.address].length === 0" ng-click="startToMineBlock()">Mining starten</button>
+                <button type="button" class=" btn btn-outline-primary" ng-disabled="mempool[currentMiner.address].length === 0" ng-click="startToMineBlock()">Mining starten</button>
             </div>
 
         </div>
@@ -282,8 +282,8 @@
                             Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
                         </p>
 
-                        <button type="button" class=" btn btn-outline-secondary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
-                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(1)">Mining starten</button>
+                        <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(1)">Mining starten</button>
 
                     </div>
                     <div id="fork" class="container tab-pane fade"><br>
@@ -295,9 +295,9 @@
                             Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
                         </p>
 
-                        <button type="button" class=" btn btn-outline-secondary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
-                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(2)">Mining starten</button>
-                        <button type="button" class=" btn btn-outline-secondary" ng-disabled="" ng-click="startToMiningCompetition(1)">Fork auflösen</button>
+                        <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(2)">Mining starten</button>
+                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(1)">Fork auflösen</button>
                     </div>
 
                 </div>
