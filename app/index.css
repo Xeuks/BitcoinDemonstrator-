@@ -12,11 +12,22 @@ input.ng-invalid-max {
 .indexHead img{
     height: 40px;
     padding-right: 10px;
+}
 
-
+header {
+    margin-bottom: 50px;
 }
 
 .card {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.navbar a {
+    color: black;
+}
+
+.navbar a.active{
+    color: white;
+    border-bottom: 5px solid white;
 }

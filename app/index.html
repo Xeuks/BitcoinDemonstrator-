@@ -14,15 +14,29 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.8/angular-route.min.js"></script>
         <script src="./app.js"></script>
 
+        <script src="./networkVisualization/networkVisualization.component.js"></script>
         <script src="./bitcoinNetwork/BitcoinNetwork.provider.js"></script>
         <script src="./wallet_demo/wallet_demo.controller.js"></script>
         <script src="./miner_demo/miner_demo.controller.js"></script>
         <script src="./blockchain_demo/blockchain.controller.js"></script>
         <script src="./network_demo/network_demo.controller.js"></script>
-        <script src="./networkVisualization/networkVisualization.component.js"></script>
+
         <script src="./startpage/startpage.controller.js"></script>
 
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
         <script src="./config.js"><!-- should be last script included --></script>
+
+        <script>
+            $(document).ready(function(){
+                $('.navbar a').click(function(){
+                    $('a').removeClass("active");
+                    $(this).addClass("active");
+                });
+            });
+        </script>
 
         <title>Bitcoin Demonstrator</title>
     </head>
@@ -34,7 +48,7 @@
 
             <div class="navbar navbar-expand-sm flex-grow-1 text-right" id="myNavbar">
                 <ul class="navbar-nav  ml-auto flex-nowrap">
-                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/startpage">Startpage</a></li>
+                    <li class="nav-item"><a class="nav-link m-2 menu-item active" href="#!/startpage">Startpage</a></li>
 
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/wallet_demo">Wallet & Transaktionen</a></li>
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/miner_demo">Mining und Konsens</a></li>
@@ -46,7 +60,7 @@
 
         <div class="row">
             <section class="col-3">
-                <network-visualization  style="position: fixed; width:25%; height: 400px;margin-top:10px" ></network-visualization>
+                <network-visualization  style="position: fixed; width:25%; height: 400px; margin-top:10px" ></network-visualization>
             </section>
 
             <!-- placeholder for the content-->
@@ -59,10 +73,6 @@
 
         <footer class="row">
         </footer>
-
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 
 </html>
