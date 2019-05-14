@@ -74,6 +74,11 @@ angular
                 $scope.fee, $scope.currentTransactionUtxos
             );
 
+            $scope.currentTransactionUtxos.forEach(function(utxo) {
+                var idx = $scope.currentWallet.utxos.indexOf(utxo);
+                $scope.currentTransactionUtxos.splice(idx, 1);
+            });
+
             $scope.wasTransactionSent = true;
             bitcoinNetwork.propagateTransaction(transaction);
         };

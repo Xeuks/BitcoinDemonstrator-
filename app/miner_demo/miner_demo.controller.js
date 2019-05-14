@@ -134,7 +134,7 @@ angular
             $scope.miningCompetitionFinished = false;
             $scope.candidateBlocks = [];
             $scope.miners.forEach(function(miner){
-                miner.createCandidateBlock("000");
+                miner.createCandidateBlock("00");
                 $scope.candidateBlocks[miner.address] = {block: miner.candidateBlock, hash:0, isValid: false};
             });
             $scope.dummyNonce = 0;

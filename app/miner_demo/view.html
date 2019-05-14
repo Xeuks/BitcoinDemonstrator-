@@ -6,11 +6,17 @@
             <h5>Beschreibung</h5>
         </div>
         <div class="card-body">
-            <p class="card-text">In dieser Demo wird aufgezeigt wie eine Transaktion in ein Block integriert wird.</p>
-
             <p class="card-text">
-
+                In dieser Demo wird aufgezeigt wie Blöcke erstellt werden und wie eine Transaktion in einen Block integriert wird und somit abgesegnet wird.
             </p>
+
+            <p>
+                Ein Block wird von einem sogenannten Miner erstellt. Im Bitcoin-Netzwerk gibt es mehrere Miner und jeder kann ein Miner werden.
+                Die Miner konkurrieren untereinander, um einen gültigen Block zu erstellen. Dabei muss die sogenannten Proof of Work (PoW) Challenge gelöst werden.
+                Die Antwort dieser Aufgabe wird mit dem Block veröffentlich und alle Teilnehmer im Bitcoin-Netzwerk können die Antwort verifizieren und dadurch sicherstellen, ob der Miner den Block korrekt erstellt hat.
+            </p>
+
+            <p>Im folgenden Artikel werden diese Schritte genauer erläutert.</p>
         </div>
     </div>
 
@@ -19,7 +25,38 @@
             <h5>Mempool</h5>
         </div>
         <div class="card-body">
-            <p class="card-text">Validation aufname in Mempool</p>
+            <p class="card-text">
+                In der Wallet Demo wurde aufgezeigt, wie eine Transaktion ausgelöst wird. Sie haben gesehen, wie die Transaktion anschliessend ins Bitcoin-Netzwerk versandt wird.
+                Dabei erhält jeder Teilnehmer im Netzwerk, die ausgelöste Transaktion. Die Miner sammeln diese Transaktionen im sogenannten Mempool.
+            </p>
+            <p>
+                Jeder Miner hat seine individuelle Liste von Transaktionen in seinem Mempool, da die Transaktion über das Netzwerk publiziert werden und eventuell nicht alle Miner die Transaktionen erhalten.
+                Bevor ein Miner die Transaktion in seinen Mempool aufnimmt überprüft er die Validität der Transaktion.
+                Falls der Miner eine nicht valide Transaktion erhält wird diese verworfen. Ein Beispiel für eine nicht valide Transaktion wäre z.B., wenn ein Wallet nicht vorhandene Bitcoins (bzw. UTXOs) ausgeben möchte.
+
+            </p>
+
+            <div class="accordion" id="furtherInfoTransactionValidation">
+                <div class="card">
+                    <div class="card-header" id="txValidationInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#txValidationInfoText" aria-expanded="true" aria-controls="txValidationInfoText">
+                                Mehr zur Validation einer Transaktion.
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="txValidationInfoText" class="collapse" aria-labelledby="txValidationInfo" data-parent="#furtherInfoTransactionValidation">
+                        <div class="card-body">
+                            wallet signatur
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+                Bitte wählen Sie einen Miner aus, um dessen Mempool zu betrachten.
+            </div>
 
             <figure class="col-auto text-center">
                 <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
@@ -34,7 +71,6 @@
                 <table class="table table-bordered" id="tbl_mempool">
                     <thead>
                     <tr>
-
                         <th>Von</th>
                         <th>An</th>
                         <th>Betrag</th>
@@ -62,86 +98,156 @@
 
     <div class="card row">
         <div class="card-header">
-            <h5>Coinbase Transaktion</h5>
-        </div>
-        <div class="card-body">
-
-
-            <p class="card-text">
-                Der Miner fügt noch ein spezielle Transaktion hinzug und zwar die sogenannte
-                Coinbase Transaktion. Für den Mining-Arbeit, die vom Miner erbracht wird, erhält er eine Belohnung und zwar
-                die Fees, die in der Transaktion bezahlt wird. Zusätzlich kann er sich einen Reward für die Blockerstellung
-                zu schreiben.
-
-
-                Ausgeben nach TODO confirmations
-                <table class="table table-bordered" id="tbl_coinbase">
-                    <thead>
-                    <tr>
-                        <th>An</th>
-                        <th>Reward + Fees</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbl_coinbase_body">
-                    <tr>
-                        <td>
-                            <figure class="col-auto">
-                                <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
-                                <figcaption>
-                                    Miner#{{currentMiner.address}}
-                                </figcaption>
-                            </figure>
-                        </td>
-                        <td>{{getCoinbaseReward(currentMiner.mempool); }} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </p>
-        </div>
-    </div>
-
-    <div class="card row">
-        <div class="card-header">
             <h5>Candidate Block & Block erstellung</h5>
         </div>
         <div class="card-body">
 
             <p class="card-text">
-                erste transaktion coinbase
-
-                Ein Miner kann nun die Transaktionen aus seinem Mempool herausnehmen und daraus ein Block generieren.
-                Dabei kann er frei wählen welche Transaktionen er auswählt
-
-
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Text:</span>
-                    </div>
-                    <input class="form-control" type="text" id="txHashText" ng-model="hashText">
-                </div>
-
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Hash:</span>
-                    </div>
-                    <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
-                </div>
-            </p>
-
-            <p class="card-text">
-                Coinbase tx auswahl
-
-                pow
-                jede 10 min -> wie? retargetting
-
-
-
+                Aus den Transaktionen, die sich im Mempool befinden, kann sich der Miner beliebig viele auswählen und in ein Block integrieren. Der Block, der durch einen Miner in Bearbeitung ist, nennt man Candidate Block.
+                Dabei setzt sich der Blockinhalt aus einer Auflistung von Transaktionen und einigen weiteren Informationen zusammen. Nachfolgend sieht man den Inhalt eines solchen Candidate Blockes.
 
             </p>
+
+            <div class="accordion" id="furtherInfoCandidateBLock">
+                <div class="card">
+                    <div class="card-header" id="candidateBlockInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#candidateBlockInfoText" aria-expanded="true" aria-controls="candidateBlockInfoText">
+                                Wie werden die Transaktionen ausgewählt?
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="candidateBlockInfoText" class="collapse" aria-labelledby="candidateBlockInfo" data-parent="#furtherInfoCandidateBLock">
+                        <div class="card-body">
+                            Eine Transaktion beinhaltet eine Verarbeitungsgebühr die sogenannte Fee. Den Fee kann sich der Miner zuschreiben, wenn er die Transaktion in den Block aufnimmt.
+                            Daher werden die Transaktionen mit den grössten Fees bevorzugt und am schnellsten in die Blockchain aufgenommen.
+                            Bei Bitcoin gibt es jedoch eine Beschränkung der Blockgrösse, diese darf 1MB nicht überschreiten und dadurch ist die Anzahl der möglichen Transkationen innerhalb eines Blockes beschränkt.
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Im Block wurde eine spezielle Transaktion hinzugefügt, die nicht im Mempool ist. Diese Transaktion nennt man Coinbase Transaktion.
+                Es handelt sich dabei, um die Transaktion, bei der sich der Miner den Reward und die Fee überweist.
+            </p>
+
+            <div class="accordion" id="furtherInfoCoinbase">
+                <div class="card">
+                    <div class="card-header" id="coinbaseInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#coinbaseInfoText" aria-expanded="true" aria-controls="coinbaseInfoText">
+                                Was beinhaltet die Coinbase Transaktion?
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="coinbaseInfoText" class="collapse" aria-labelledby="coinbaseInfo" data-parent="#furtherInfoCoinbase">
+                        <div class="card-body">
+                            <p>
+                                Bei der Coinbase Transaktion wird der Reward für die Blockgenerierung plus die Summe aller Fees der Transaktionen, die sich im Block befinden, zugeschrieben.
+                                TODO Reward
+                                Ausgeben nach TODO confirmations
+                            </p>
+                            <table class="table table-bordered" id="tbl_coinbase">
+                                <thead>
+                                <tr>
+                                    <th>An</th>
+                                    <th>Reward + Fees</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbl_coinbase_body">
+                                <tr>
+                                    <td>
+                                        <figure class="col-auto">
+                                            <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
+                                            <figcaption>
+                                                Miner#{{currentMiner.address}}
+                                            </figcaption>
+                                        </figure>
+                                    </td>
+                                    <td>{{getCoinbaseReward(currentMiner.mempool); }} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Damit der Block nun gültig wird und in die Blockchain aufgenommen werden kann muss der sogenannte Proof of Work geleistet werden.
+                Dabei handelt es sich, um eine Aufgabe auf der eine Antwort gefunden werden muss.
+                Dazu werden die zwei Felder Nonce und Hash, die in der unteren Visualisierung des Candidate Blockes aufgelistet sind, benötigt.
+            </p>
+            <p>
+                Die Antwort auf den  Proof of Work wird ermittelt, indem der Hash des Blockes generiert wird. Falls dieser mit einer bestimmten Anzahl von 0 beginnt, wurde eine gültige Antwort gefunden.
+                Hier wurde definiert, dass ein Hash mit mindestens zwei Nullen beginnen muss, für eine gültige Antwort.
+            </p>
+
+            <div class="accordion" id="furtherInfoPow">
+                <div class="card">
+                    <div class="card-header" id="HashInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#HashInfoText" aria-expanded="true" aria-controls="HashInfoText">
+                                Was ist eine Hash Funktion?
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="HashInfoText" class="collapse" aria-labelledby="HashInfo" data-parent="#furtherInfoPow">
+                        <div class="card-body">
+
+                            <p>
+                                TODO
+                            </p>
+
+                            <p>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Text:</span>
+                                    </div>
+                                    <input class="form-control" type="text" id="txHashText" ng-model="hashText">
+                                </div>
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Hash:</span>
+                                    </div>
+                                    <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
+                                </div>
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header" id="PoWInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#PoWInfoText" aria-expanded="true" aria-controls="PoWInfoText">
+                                Wie wird die Antwort auf den Proof of Work gefunden?
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="PoWInfoText" class="collapse" aria-labelledby="PoWInfo" data-parent="#furtherInfoPow">
+                        <div class="card-body">
+                            TODO
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-8 offset-md-2 border border-dark" style="margin-bottom: 20px;">
                 <div class="row justify-content-md-center">
                     Canidate Block
+                </div>
+                <div class="row border-top justify-content-md-center">
+                    Gemined durch: Miner#{{currentMiner.address}}
                 </div>
                 <div class="row border-top">
                     <div class="container">
@@ -161,10 +267,12 @@
                                 <div class="col-2">{{transaction.to}}</div>
                             </div>
                         </div>
-                        <div class="row justify-content-md-center">Nonce {{currentMiner.candidateBlock.nonce}}</div>
+
                     </div>
                 </div>
+                <div class="row border-top justify-content-md-center">Nonce: {{currentMiner.candidateBlock.nonce}}</div>
                 <div class="row border-top justify-content-md-center">
+
                     Hash: {{currentMiner.candidateBlock.hash}}
                 </div>
             </div>
@@ -173,13 +281,17 @@
                 Herzlichen Glückwunsch ein gültiger Block wurde gemined.
             </p>
 
+            <p class="alert alert-info" role="alert" ng-if="currentMiner.mempool.length > 0 && !isMiningInProgress() && !validBlockFound">
+                Bitte starten Sie den Mining Prozess.
+            </p>
+
             <p class="alert alert-warning" role="alert" ng-if="currentMiner.mempool.length === 0">
-                Bitte Transaktionen für alle Miner generieren damit Mining gestartet werden kann.
+                Bitte Transaktionen für aktuellen Miner generieren, damit Mining gestartet werden kann.
             </p>
 
             <div>
-
-                <button type="button" class=" btn btn-outline-primary" ng-disabled="mempool[currentMiner.address].length === 0" ng-click="startToMineBlock()">Mining starten</button>
+                <button type="button" class=" btn btn-outline-primary" ng-click="generateTransaction(currentMiner)">Zufällige Transaktionen generieren</button>
+                <button type="button" class=" btn btn-outline-primary" ng-disabled="currentMiner.mempool.length === 0 && isMiningInProgress()" ng-click="startToMineBlock()">Mining starten</button>
             </div>
 
         </div>
@@ -188,10 +300,16 @@
 
     <div class="card row">
         <div class="card-header">
-            <h5>Mining Competition erstellung</h5>
+            <h5>Mining Competition & Konsensbildung</h5>
         </div>
         <div class="card-body">
-            <p class="card-text row"></p>
+            <p class="card-text">
+                Im Bitcoin Netzwerk konkurrieren die Miner untereinander, um einen Block zu generieren. Dabei sind sie motiviert durch den Reward und die Fees.
+                Nach dem ein Block gefunden wurde, wird dieser im Netzwerk publiziert. Die Teilnehmer im Bitcoin Netzwerk empfangen den Block und hängen diesen an ihre lokale Blockchain an.
+                Dabei wird vorhergehend überprüft, ob alle Transaktionen valide sind und die PoW Antwort korrekt ist.
+                Somit kann die Blockchain synchronisiert werden, obwohl alle Teilnehmer im Netz die Blockchain lokal bei sich pflege. Durch das Lösen des PoW wurde ein Konsens zwischen den Teilnehmer gefunden.
+
+            </p>
 
             <div class="row">
                 <div ng-repeat="miner in miners" class="container" >
@@ -204,8 +322,6 @@
                             <input class="form-control" type="text" id="" placeholder="{{candidateBlocks[miner.address].hash}}">
                         </div>
 
-
-
                     </p>
 
                 </div>
@@ -213,9 +329,6 @@
 
 
             <div class="row align-items-center justify-content-md-center">
-
-
-
                 <div >
                     <img src="./images/block.png"/>
                 </div>
@@ -226,7 +339,7 @@
                     <img src="./images/block.png"/>
                 </div>
 
-                <div >
+                <div ng-if="isMiningInProgress() || miningCompetitionFinished">
                     <div class="align-items-center">
                         <div >
                             <img src="./images/chain.jpg"/>
@@ -259,52 +372,78 @@
                 </div>
              </div>
 
-            <div class="container">
-
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a onclick="return false;" class="nav-link " data-toggle="tab" href="#mining">Mining Competition</a>
-                    </li>
-                    <li class="nav-item">
-                        <a onclick="return false;" class="nav-link" data-toggle="tab" href="#fork">Forks</a>
-                    </li>
-                </ul>
-
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div id="mining" class="container tab-pane active"><br>
-                        <h3>Mining Competition</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-
-
-                        <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
-                            Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
-                        </p>
-
-                        <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
-                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(1)">Mining starten</button>
-
-                    </div>
-                    <div id="fork" class="container tab-pane fade"><br>
-                        <h3>Forks</h3>
-                        <p>Confirmations.</p>
-
-
-                        <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
-                            Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
-                        </p>
-
-                        <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
-                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(2)">Mining starten</button>
-                        <button type="button" class=" btn btn-outline-primary" ng-disabled="" ng-click="startToMiningCompetition(1)">Fork auflösen</button>
+            <div class="accordion" id="furtherInfoConsense" style="margin-top: 20px;">
+                <div class="card">
+                    <div class="card-header" id="CompetitionInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#CompetitionInfoText" aria-expanded="true" aria-controls="CompetitionInfoText">
+                                Mining Competition
+                            </button>
+                        </h5>
                     </div>
 
+                    <div id="CompetitionInfoText" class="collapse show" aria-labelledby="CompetitionInfo" data-parent="#furtherInfoConsense">
+                        <div class="card-body">
+                            <p>Bei der Competition konkurrieren  die Miner untereinander, um einen gültigen Block zu finden.</p>
+
+
+                            <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
+                                Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
+                            </p>
+
+                            <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                            <button type="button" class=" btn btn-outline-primary" ng-disabled="!checkIfTransactionsArePresent() || isMiningInProgress()" ng-click="startToMiningCompetition(1)">Mining starten</button>
+
+                        </div>
+                    </div>
                 </div>
+
+                <div class="card">
+                    <div class="card-header" id="ForkInfo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ForkInfoText" aria-expanded="true" aria-controls="ForkInfoText">
+                                Forks
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="ForkInfoText" class="collapse" aria-labelledby="ForkInfo" data-parent="#furtherInfoConsense">
+                        <div class="card-body">
+                            <p>
+                                Im Laufe der Mining Competition und Konsensbildungs, kann es zu Forks in der Blockchain kommen.
+                                Dabei werden zwei Blöcke beinahe zur selben Zeit gefunden. Somit stellt sich die Frage, wo der nächste Block angehängt werden soll.
+                            </p>
+
+                            <p class="alert alert-info" role="alert" ng-if="!forkOccured && !forkResolved">
+                                Bitte erzwingen Sie einen Fork.
+                            </p>
+
+                            <p ng-if="forkOccured">
+                                Die Miner können frei wählen, wo Sie weiterfahren wollen. Nachdem ein Miner wieder ein Block findet, wird ein Fork aufgelöst, da dieser Block auf einer der zwei vorhergehenden Blöcke verweist.
+                                Dadurch fällt der Block weg, auf dem nicht verwiesen wird.
+                            </p>
+
+                            <p class="alert alert-success" role="alert" ng-if="forkResolved">
+                                Herzlichen Glückwunsch der Fork wurde aufgelöst.
+                            </p>
+
+                            <p class="alert alert-warning" role="alert" ng-if="!checkIfTransactionsArePresent()">
+                                Bitte neue Transaktionen generieren damit Mining gestartet werden kann.
+                            </p>
+
+                            <button type="button" class=" btn btn-outline-primary" ng-click="generateTransactionForAllMiners()">Transaktionen generieren.</button>
+                            <button type="button" class=" btn btn-outline-primary" ng-disabled="!checkIfTransactionsArePresent() || isMiningInProgress() || forkOccured" ng-click="startToMiningCompetition(2)">Fork erzwingen</button>
+                            <button type="button" class=" btn btn-outline-primary" ng-disabled="!checkIfTransactionsArePresent() || isMiningInProgress() || !forkOccured" ng-click="startToMiningCompetition(1)">Fork auflösen</button>
+
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
 
-
         </div>
+
     </div>
 
     <div class="card row">
@@ -336,6 +475,37 @@
 
         </div>
     </div>
+
+
+    <div class="card row">
+        <div class="card-header">
+            <h5 class="card-title">Weitere Informationen für Interessierte </h5>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                TODO
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav >
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#!/blockchain_demo">weiter zum Blockchain-Browser</a></li>
+        </ul>
+    </nav>
 
 
 

@@ -23,6 +23,10 @@ header {
     margin-bottom: 20px;
 }
 
+.accordion {
+    margin-bottom: 20px;
+}
+
 .accordion > .card {
     margin-top: 0px;
     margin-bottom: 0px;
