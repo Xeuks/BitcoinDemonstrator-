@@ -18,27 +18,26 @@
             <p class="card-text">
                 In dieser Domonstration wird aufgezeigt wie eine Bitcoin Transfer abläuft. Dazu müssen Sie nun bestimmen welche Wallets in der Transaktion invovliert sind.
             </p>
+
+            <div class="row justify-content-md-center">
+                <figure class="walletFigure col-auto text-center">
+                    <img src="./images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
+                    <figcaption>
+                        Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
+                    </figcaption>
+                </figure>
+
+                <div class="col-auto"><img  src="./images/transactionSend.jpg" height="60px" width="120px"/></div>
+
+                <figure class="walletFigure col-auto text-center">
+                    <img src="./images/walletIcon.png" height="50px" width="50px"/>
+
+                    <figcaption>
+                        Wallet#<select name="txToWallet" ng-options="wallet.address for wallet in wallets | filter:{ address: '!'+currentWallet.address }" ng-model="toWallet"></select>
+                    </figcaption>
+                </figure>
+            </div>
         </div>
-    </div>
-
-
-    <div class="row justify-content-md-center">
-        <figure class="walletFigure col-auto text-center">
-            <img src="./images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
-            <figcaption>
-                Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
-            </figcaption>
-        </figure>
-
-        <div class="col-auto"><img  src="./images/transactionSend.jpg" height="60px" width="120px"/></div>
-
-        <figure class="walletFigure col-auto text-center">
-            <img src="./images/walletIcon.png" height="50px" width="50px"/>
-
-            <figcaption>
-                Wallet#<select name="txToWallet" ng-options="wallet.address for wallet in wallets | filter:{ address: '!'+currentWallet.address }" ng-model="toWallet"></select>
-            </figcaption>
-        </figure>
     </div>
 
     <div class="card row">
@@ -148,14 +147,14 @@
                             <img src="./images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
 
                             <figcaption>
-                                Wallet#{{toWallet.address}} erhält {{amount}}  bitcoins
+                                Wallet#{{toWallet.address}} erhält {{amount}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
                             </figcaption>
                         </figure>
                         <figure ng-if="(fee) > 0" class="text-center" data-toggle="tooltip" data-placement="right" title="Der Miner erhält für seien Arbeit einen Fee als Reward">
                             <img src="./images/minerIcon.jpg" height="50px" width="50px"/>
 
                             <figcaption>
-                                Miner verdient {{fee}} bitcoins als Verarbeitungskosten
+                                Miner verdient {{fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>  als Verarbeitungskosten
                             </figcaption>
                         </figure>
 
@@ -163,22 +162,78 @@
                             <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
                             <figcaption>
-                                Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}  bitcoins
+                                Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
                             </figcaption>
                         </figure>
+
+
+                    </div>
+
+                    <div class="container">
+                        <button class="row btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
+
                     </div>
                 </div>
             </div>
-
-
-            <button class="row btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
-
-
-
-
-
-
         </div>
     </div>
+
+    <div class="card row">
+        <div class="card-header">
+            <h5 class="card-title">Weitere Informationen für Intressierte</h5>
+        </div>
+        <div class="card-body">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Collapsible Group Item #1
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Collapsible Group Item #2
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Collapsible Group Item #3
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav >
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#!/miner_demo">weiter zu Mining</a></li>
+        </ul>
+    </nav>
 
 </article>

@@ -20,29 +20,6 @@ angular
             return {from: 0, to: node.address, amount: amount, utxos : node.utxos, fee: 0, change:0};
         };
 
-        this.createSampleBlockchain = function(genesisBlock) {
-
-            var sampelTxBlock1 = [];
-            sampelTxBlock1.push(
-                {from: 0, to: 3, amount: 11, utxos : [{amount: 11}], fee: 0, change:0},
-                {from: 1, to: 2, amount: 5, utxos : [{amount: 20}], fee: 1, change:14});
-            var block1 = new Block(3, sampelTxBlock1, "00", genesisBlock.hash);
-            block1.nonce = 230;
-            block1.hash = "004ea51d48bc0a191a1b8ac47d14fc08099f2003b55cf55aacb6d55d362d1e4b";
-
-            var sampleTxBlock2 = [];
-            sampleTxBlock2.push(
-                {from: 0, to: 5, amount: 17, utxos : [{amount: 17}], fee: 0, change:0},
-                {from: 2, to: 4, amount: 3, utxos : [{amount: 4}], fee: 0.5, change:0.5},
-                {from: 3, to: 1, amount: 10, utxos : [{amount: 50}], fee: 4, change:36},
-                {from: 4, to: 2, amount: 5.5, utxos : [{amount: 20}], fee: 2.5, change:12});
-            var block2 = new Block(5, sampleTxBlock2, "00", block1.hash);
-            block2.nonce = 2;
-            block2.hash = "0083d30c81f5948f8734a5a2d03861b2eea304c35356bcb790d7a7e18525bdd2";
-
-            return [genesisBlock, block1, block2];
-        };
-
         this.createBitcoinNetwork = function(wallets, miners) {
             var gensisTransactions = [];
 
@@ -58,11 +35,11 @@ angular
 
             var genesisBlock = new Block(0, gensisTransactions, 0 , "");
             genesisBlock.calculateNextHash();
+            genesisBlock.height = 0;
 
-            var blockchain = this.createSampleBlockchain(genesisBlock);
 
 
-            bcNetwork = new BitcoinNetwork(blockchain, wallets, miners);
+            bcNetwork = new BitcoinNetwork(genesisBlock, wallets, miners);
 
         };
 
@@ -73,8 +50,8 @@ angular
     });
 
 
-function BitcoinNetwork(blockchain, wallets, miners) {
-    this.blockchain = blockchain;
+function BitcoinNetwork(genesisBlock, wallets, miners) {
+    this.blockchain = [[genesisBlock]];
 
     this.wallets = wallets;
 
@@ -98,8 +75,12 @@ function BitcoinNetwork(blockchain, wallets, miners) {
     };
 
     this.getBlockchain = function() {
-        return [].concat(this.blockchain);
+        return this.blockchain;
     };
+
+    this.getGenesisBlock = function() {
+        return this.blockchain[0][0];
+    }
 
     this.addListener = function (listener) {
         this.listeners.push(listener);
@@ -111,12 +92,24 @@ function BitcoinNetwork(blockchain, wallets, miners) {
     };
 
     this.addBlockToBlockchain = function(block) {
+        var currentHeadIdx = this.blockchain.length - 1;
+
+        var isParentInHead = this.blockchain[currentHeadIdx].some(function(headBlock) {
+           return headBlock.hash === block.parentBlockHash;
+        });
+
+
+        if(isParentInHead) {
+            this.blockchain.push([block]);
+        } else {
+            //parent is in prev
+            this.blockchain[currentHeadIdx].push(block);
+        }
+    };
+
+    this.onNewBlockMined = function(block) {
         this.propagateBlock(block);
-
-        var parentHash = this.blockchain[this.blockchain.length-1].hash;
-       // if(parentHash.)
-
-        this.blockchain.push(block);
+        this.addBlockToBlockchain(block);
     };
 
     this.propagateBlock = function (block) {
@@ -162,6 +155,10 @@ function BitcoinNetwork(blockchain, wallets, miners) {
 
         return new Transaction(fromWallet.address, toWallet.address, amount, fee, utxosList);
     };
+
+    this.createBlock = function(minedBy, transactions, difficulty, parentBlockHash) {
+        return new Block(minedBy, transactions, difficulty, parentBlockHash);
+    };
 }
 
 function Block(minedBy, transactions, difficulty, parentBlockHash) {
@@ -204,7 +201,7 @@ function Miner(address, utxos) {
     this.address = address;
     this.utxos = utxos;
     this.mempool = [];
-    this.blockchainHead = "";
+    this.parentHash = "";
 
     this.candidateBlock = null;
 
@@ -214,9 +211,9 @@ function Miner(address, utxos) {
 
     this.onNewBlock = function (block) {
         if(!this.candidateBlock.isValid()) {
-            this.blockchainHead = block.hash;
+            this.parentHash = block.hash;
         } else {
-            this.blockchainHead = this.candidateBlock.hash;
+            this.parentHash = this.candidateBlock.hash;
         }
 
         this.mempool = [];
@@ -232,7 +229,7 @@ function Miner(address, utxos) {
         var transactions = [coinbaseTx].concat(this.mempool);
 
 
-        this.candidateBlock = new Block(this.address, transactions, difficulty, this.blockchainHead);
+        this.candidateBlock = new Block(this.address, transactions, difficulty, this.parentHash);
     };
 }
 

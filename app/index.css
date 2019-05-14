@@ -15,12 +15,17 @@ input.ng-invalid-max {
 }
 
 header {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
 }
 
 .card {
     margin-top: 20px;
     margin-bottom: 20px;
+}
+
+.accordion > .card {
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 .navbar a {
@@ -34,4 +39,13 @@ header {
 .navbar a.active{
     color: white;
     border-bottom: 5px solid white;
+}
+
+.hideOverflow
+{
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    width:100%;
+    display:block;
 }

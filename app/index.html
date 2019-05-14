@@ -36,7 +36,6 @@
                 if(urlParts.length === 2) {
                     currentPage = "#!" + urlParts[1];
                     $('.navbar a').each(function (idx, menuItem) {
-                        console.log(menuItem);
                         if ($(menuItem).attr("href") === currentPage) {
                             $(menuItem).addClass("active");
                         }
@@ -72,7 +71,7 @@
 
         <div class="row">
             <section class="col-3">
-                <network-visualization  style="position: fixed; width:25%; height: 400px; margin-top:10px" ></network-visualization>
+                <network-visualization  style="position: fixed; width:25%; height: 300px; margin-top:10px" ></network-visualization>
             </section>
 
             <!-- placeholder for the content-->

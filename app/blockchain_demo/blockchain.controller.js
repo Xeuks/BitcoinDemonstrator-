@@ -9,13 +9,87 @@ angular.module('myApp')
     }])
     .controller('BlockchainController', ['$scope', 'bitcoinNetwork', function($scope, bitcoinNetwork) {
         $scope.blockchain = bitcoinNetwork.getBlockchain();
-        $scope.currentBlock = $scope.blockchain[0];
+        $scope.currentBlock = bitcoinNetwork.getGenesisBlock();
+        $scope.currentBlockHeight = 0;
         $scope.walletStates = [];
         $scope.nodes = bitcoinNetwork.getNodes();
+        $scope.hasNoPreviousBlocks = true;
+        $scope.hasNoNextBlocks = true;
+        $scope.currentVisualizedHeadHeight = 0;
 
 
-        $scope.getBlockHeight = function(block) {
-            return $scope.blockchain.indexOf(block);
+        $scope.initBlockchainVisualization = function() {
+            $scope.cy = cytoscape({
+                container: document.getElementById('cyBlockchain'),
+
+                layout: {
+                    name: 'preset',
+
+                },
+
+                userZoomingEnabled: false,
+                userPanningEnabled: false,
+                boxSelectionEnabled: false,
+            });
+
+
+
+            $scope.loadBlocks();
+            $scope.cy.nodes().ungrabify();
+        };
+
+        $scope.loadBlocks = function() {
+            var currentHeight = $scope.currentVisualizedHeadHeight;
+            var numBlocksToLoad =   $scope.blockchain.length;//5;
+
+
+            var nextXPos = 100;
+
+            var hashToBlockchainIndex = {};
+
+            for (var loadedBlockHeightIdx = 0; loadedBlockHeightIdx < numBlocksToLoad; loadedBlockHeightIdx++) {
+                var blockIdxInChain = currentHeight + loadedBlockHeightIdx;
+
+                if ($scope.blockchain.length > blockIdxInChain) {
+
+                    var nextYPos = 50;
+
+                    $scope.blockchain[blockIdxInChain].forEach(function(blockToLoad, idx){
+
+                        var blockId = blockToLoad.hash;
+                        var parentBlockId = blockToLoad.parentBlockHash;
+                        hashToBlockchainIndex[blockId] = {height: blockIdxInChain, forkIdx: idx};
+
+                        $scope.cy.add({group: 'nodes', data: {id: blockId}, position: {x: nextXPos, y: nextYPos}});
+
+                        if(loadedBlockHeightIdx > 0) {
+                            $scope.cy.add({group: 'edges', data: { source: blockId, target: parentBlockId }});
+                        }
+
+                        $scope.cy.$("#" + blockId).forEach(function (node) {
+                            node.style("background-image", "./images/block.png");
+                            node.style("background-fit", "contain");
+                            node.style("shape", "rectangle");
+                        });
+
+                        $scope.cy.on('click', 'node', function(evt){
+
+                            var blockchainLocationVector = hashToBlockchainIndex[this.id()];
+
+                            $scope.currentBlock = $scope.blockchain[blockchainLocationVector.height][blockchainLocationVector.forkIdx];
+                            $scope.setWalletsState($scope.currentBlock);
+                            $scope.currentBlockHeight =  blockchainLocationVector.height;
+                            $scope.$apply();
+                        });
+
+                        nextYPos += 100;
+                    });
+
+                    nextXPos += 200;
+                }
+            }
+
+            $scope.currentVisualizedBlockHeadIdx += loadedBlockHeightIdx;
         };
 
         $scope.getBlockReward = function(block) {
@@ -29,23 +103,38 @@ angular.module('myApp')
         };
 
         $scope.getPreviousBlockHash = function(block) {
-            var blockIdx = $scope.getBlockHeight(block);
+            var blockIdx = block.height;
             var prevHash = "Gensis Block hat keine Vorgänger";
 
-            if(blockIdx > 0) {
-                prevHash = $scope.blockchain[blockIdx-1].hash;
+            if(!$scope.isGensisBlock(block)) {
+                prevHash = block.parentBlockHash;
             }
 
             return prevHash;
         };
 
         $scope.isGensisBlock = function(block) {
-            var blockIdx = $scope.getBlockHeight(block);
-            return blockIdx === 0;
+            return $scope.currentBlockHeight === 0;
         };
 
         $scope.setWalletsState = function(block) {
-            var blockIdx = this.blockchain.indexOf(block);
+
+            var blockIdx = $scope.currentBlockHeight;
+            //get chain
+            var chainToBlock = [block];
+
+            var currentHeight = blockIdx;
+            for(currentHeight; currentHeight > 0; currentHeight--) {
+                var prevBlock = $scope.blockchain[currentHeight].find(function (parentBlock) {
+                    return parentBlock.hash === chainToBlock[0].parentBlockHash;
+                });
+                if(prevBlock !== undefined)
+                    chainToBlock.unshift(prevBlock);
+            }
+
+            chainToBlock.unshift(bitcoinNetwork.getGenesisBlock());
+
+            //iterate over chain aggregate
             $scope.walletStates = [];
             if (blockIdx >= 0) {
 
@@ -53,8 +142,8 @@ angular.module('myApp')
                     $scope.walletStates[node.address-1] = {address: node.address, balance: 0, utxos: [], receivedUtxos: [], spentUtxos: []};
                 });
 
-                for (var i = 0; i <= blockIdx; i++) {
-                    this.blockchain[i].transactions.forEach(function (transaction) {
+                chainToBlock.forEach(function(prevBlock) {
+                    prevBlock.transactions.forEach(function (transaction) {
                         var toWalletAddress = transaction.to-1;
                         var fromWalletAddress = transaction.from;
 
@@ -63,7 +152,6 @@ angular.module('myApp')
 
                         if(fromWalletAddress > 0) {
                             transaction.utxos.forEach(function (transactionUtxo) {
-                                $scope.walletStates[fromWalletAddress-1].balance -= transactionUtxo.amount;
                                 var idx = $scope.walletStates[fromWalletAddress-1].utxos.findIndex(function(curUtxo) {
                                     return transactionUtxo.amount === curUtxo;
                                 });
@@ -73,27 +161,34 @@ angular.module('myApp')
                                 }
                             });
 
-                            $scope.walletStates[fromWalletAddress-1].balance += transaction.change;
-
                             if(transaction.change > 0)
                                 $scope.walletStates[fromWalletAddress-1].utxos.push(transaction.change);
                         }
 
-                        $scope.walletStates[toWalletAddress].balance += transaction.amount;
-                        $scope.walletStates[toWalletAddress].utxos.push(transaction.amount);
 
+                        $scope.walletStates[toWalletAddress].utxos.push(transaction.amount);
                     });
-                }
+
+                });
+
+
+                $scope.walletStates.forEach(function (wallet) {
+                    wallet.balance = 0;
+                    wallet.utxos.forEach(function (utxo) {
+                        wallet.balance += utxo;
+                    });
+                });
+
 
                 if(blockIdx === 0) {
-                    this.blockchain[blockIdx].transactions.forEach(function (transaction) {
+                    block.transactions.forEach(function (transaction) {
                         var toWalletAddress = transaction.to-1;
                         transaction.utxos.forEach(function(utxo) {
                             $scope.walletStates[toWalletAddress].receivedUtxos.push(utxo.amount);
                         });
                     });
                 } else {
-                    this.blockchain[blockIdx].transactions.forEach(function (transaction) {
+                    block.transactions.forEach(function (transaction) {
                         var toWalletAddress = transaction.to-1;
                         var fromWalletAddress = transaction.from;
 
@@ -114,4 +209,5 @@ angular.module('myApp')
         };
 
         $scope.setWalletsState($scope.currentBlock);
+        $scope.initBlockchainVisualization();
     }]);

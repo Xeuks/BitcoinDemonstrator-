@@ -34,15 +34,18 @@
                 erstellt. Mehr zu den Miner erfahren Sie in der Demo <b>TODO</b>.
             </p>
 
-            <h6>Block # {{getBlockHeight(currentBlock)}}</h6>
+            <h6>Block # {{currentBlockHeight}}</h6>
             <p>
-                Bitte wählen Sie ein Block aus: <select ng-change="setWalletsState(currentBlock);" ng-model="currentBlock" ng-options="block.hash for block in blockchain" ></select>
+                Bitte wählen Sie ein Block aus: <!--select ng-change="setWalletsState(currentBlock);" ng-model="currentBlock" ng-options="block.hash for block in blockchain" ></select-->
             </p>
+
+            <div id="cyBlockchain" style="width:100%; height: 250px;"></div>
 
             <h6>Block Informationen</h6>
             <table class="table table-bordered" id="tbl_blocksummary">
                 <tbody id="tbl_blocksummary_body">
                     <tr>
+
                          <td>
                              Erstellt durch Miner:
                          </td>
@@ -108,13 +111,13 @@
                     </tr>
                     </thead>
                     <tbody id="tbl_transactions_body">
-                    <tr  ng-repeat="transaction in currentBlock.transactions">
+                    <tr  ng-repeat="transaction in currentBlock.transactions track by $index">
                         <td>{{transaction.from}}</td>
                         <td><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in transaction.utxos">
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in transaction.utxos track by $index">
                               {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
@@ -143,23 +146,23 @@
                     </tr>
                     </thead>
                     <tbody id="tbl_transactions_body">
-                    <tr  ng-repeat="state in walletStates">
+                    <tr  ng-repeat="state in walletStates track by $index">
                         <td>{{state.address}}</td>
                         <td><div style="width:50px;display:inline;">{{state.balance}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.utxos">
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.utxos track by $index">
                                 {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.receivedUtxos">
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.receivedUtxos track by $index">
                                 {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.spentUtxos">
+                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.spentUtxos track by $index">
                                 {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>

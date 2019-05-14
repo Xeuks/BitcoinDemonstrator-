@@ -59,8 +59,9 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                     $scope.cy.$('#' + tmpId).animate({
                         position: neighborNode.position(),
                     }, {
-                        duration: 1000,
+                        duration: 2500,
                         complete : function() {
+                            //TODO check if valid & only sent if valid
                             $scope.cy.$('#'+tmpId).remove();
                             sentToNeighborNode[neighborNodeId].push(sourceNode);
                             animatePropagation(neighborNodeId);
@@ -116,7 +117,7 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
     var minerImg = "./images/minerIcon.jpg";
     var metaData = {
         "a": {title:"wallet1", img:walletImg},
-        "b": {title:"wallet1", img:walletImg},
+        "b": {title:"wallet2", img:walletImg},
         "c": {title:"miner1", img:minerImg},
         "d": {title:"miner2", img:minerImg},
         "e": {title:"miner3", img:minerImg}

@@ -170,7 +170,7 @@ angular
                         candidateBlock.isValid = candidateBlock.block.isValid();
 
                         if(candidateBlock.isValid) {
-                            bitcoinNetwork.addBlockToBlockchain(candidateBlock.block);
+                            bitcoinNetwork.onNewBlockMined(candidateBlock.block);
                         }
                     });
 
