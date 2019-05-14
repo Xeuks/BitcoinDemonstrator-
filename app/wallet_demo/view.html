@@ -6,7 +6,7 @@
             <h5>Beschreibung</h5>
         </div>
         <div class="card-body">
-            <p class="card-text">In dieser Demo wird aufgezeigt wie eine Wallet genutzt wird um Bitcoins zu senden.</p>
+            <p class="card-text">In dieser Demo wird aufgezeigt wie eine Wallet genutzt wird, um Bitcoins zu senden.</p>
 
             <p class="card-text">
                 Um mit Bitcoin zu handeln benötigt man eine sogenannte Wallet-Applikation. In dieser Applikation werden die vorhandenen
@@ -16,7 +16,7 @@
             </p>
 
             <p class="card-text">
-                In dieser Domonstration wird aufgezeigt wie eine Bitcoin Transfer abläuft. Dazu müssen Sie nun bestimmen welche Wallets in der Transaktion invovliert sind.
+                Bitte wählen Sie die Wallets aus, die in der Transaktion involviert sind.
             </p>
 
             <div class="row justify-content-md-center">
@@ -54,7 +54,7 @@
                 zur Verfügung gestellt, in der er angeben kann, wie viel er dem Empfänger zusenden will. Jede Transaktion hat gewisse Transaktionsgebühren, diese können auch
                 vom Walletbesitzer eingestellt werden. Je mehr Gebühren der Benutzer zu zahlen bereit ist, desto schneller wird die Transaktion verarbeitet.
 
-                Zu diesem Thema wird im Kapitel <b>TODO</b> mehr erläutert.
+                Zu diesem Thema wird in der Demo Mining und Konsens mehr erläutert.
             </p>
             <p class="card-text">Bitte geben Sie einen Betrag und die Gebühren ein:</p>
 
@@ -62,7 +62,7 @@
                 <div class="form-group">
                     <label for="txAmount">Betrag:</label>
                     <div class="input-group">
-                        <input aria-describedby="amountHelp" class="form-control" id="txAmount" ng-model="amount" type="number" min="1" max="{{(currentWallet|sumUtxos) - fee}}" required>
+                        <input aria-describedby="amountHelp" class="form-control" id="txAmount"  ng-change="validateTransaction()"  ng-model="amount" type="number" min="1" max="{{(currentWallet|sumUtxos) - fee}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
@@ -73,14 +73,14 @@
 
                     <label for="txFee">Fee:</label>
                     <div class="input-group">
-                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" type="number" min="1" max="{{(currentWallet|sumUtxos) - amount}}" required>
+                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" ng-change="validateTransaction()" type="number" min="0" max="{{(currentWallet|sumUtxos) - amount}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </span>
                         </div>
                     </div>
-                    <small id="feeHelp" class="form-text text-muted">Fee zwischen 1 und {{(currentWallet|sumUtxos) - amount }} angeben</small>
+                    <small id="feeHelp" class="form-text text-muted">Fee zwischen 0 und {{(currentWallet|sumUtxos) - amount }} angeben</small>
                 </div>
             </form>
         </div>
@@ -94,17 +94,18 @@
         <div class="card-body">
 
             <p class="card-text">
-                In einer Wallet App kann nun die Transaktion abgeschlossen werden und die Zahlung würde daraufhin ins Bitcoin-Netzwerk versandt und damit zur Verarbeitung und Absegnung
-                weiter gereicht werden. Im folgenden Abschnitt wird beschrieben, wie die Wallet Applikation die Transaktion vorbereitet. Die Wallet verwaltet eine Liste mit allen Bitcoins
-                die der Benutzer besitzt. Diese Bitcoins nennt man UTXO (unspent transaction output. Im folgenden sehen sie diese Liste. Dabei handelt es sich um Bitcoins die dem Wallet Besitzer
-                zugesendet wurden. Es kann diese für eine Transaktion verwenden und ausgeben.
+                In der Wallet-Applikation wird eine Transaktion erstellt und anschliessend ins Bitcoin-Netzwerk versandt.
+                Im folgenden Abschnitt wird visualisiert, wie die Wallet Applikation die Transaktion vorbereitet.
             </p>
             <p class="card-text">
-                Man kann die UTXOs mit Münzen vergleichen. Man erhält Münzen und kann nur mit den erhaltenen Münzen zahlen. Wie bei echten Münzen kann man die UTXOs nicht weiter unterteilen.
-                Das heisst man muss mit der ganzen UTXO-Münze zahlen. Um einen Betrag zu entrichen müssen entsprechend genügend UTXO ausgewählt werden bis der notwendige Betrag erreicht bzw. überschritten
-                wurde. Den Überschuss wird als Rückgeld zurückgegeben. Dabei ist das Rückgeld eine neue UTXO Münze. Das Rückgeld wird ebenfalls in der Transaktion aufgelistet.
+                Die Wallet verwaltet eine Liste mit allen Bitcoins, die der Benutzer besitzt. Diese Bitcoins nennt man UTXO (unspent transaction output).
+                Dabei handelt es sich um Bitcoins, die dem Wallet Besitzer zugesendet wurden. Man kann die UTXOs mit Münzen vergleichen.
+                Die Wallet-Applikation benützt diese Münzen, um die Zahlung zu tätigen. Im Folgenden sehen die Liste der vorhandenen UTXOs.
             </p>
-            <p class="card-text">Bitte wählen Sie die Münzen mit denen bezahlt werden soll:</p>
+
+            <div class="alert alert-info" role="alert">
+                Bitte wählen Sie die UTXOs aus mit denen bezahlt werden soll. Klicken Sie auf die entsprechenden UTXO Münzen.
+            </div>
 
             <div class=" row">
                 <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction">
@@ -118,12 +119,10 @@
 
             <div ng-if="(currentTransactionUtxos.length) > 0">
                 <p class="card-text">
-                    Die Transaktion sieht wie folgt aus. Es gibt eine Liste von Eingangsmünzen und eine Liste von Empfänger mit dem entsprechende Betrag den diese erhalten.
-                    Hier ist zu beachten, dass das Rückgeld wieder an die gleiche Wallet Adresse zugesandt wird.
+                    Eine Transaktion sieht wie folgt aus. Es gibt eine Liste von Eingangsmünzen und eine Liste von Empfängern mit dem entsprechenden Betrag, den diese erhalten.
+                    Hier ist zu beachten, dass die Eingangs UTXO-Münzen, die zum Bezahlen verwendet werden, zerstört werden sobald die Transaktion angenommen wurde.
+                    Somit ist es auch nicht möglich mehrmals mit der gleichen Münze zu zahlen. (mehr dazu in der Demo Mining und Konsens).
 
-                    <br/>
-                    <br/>
-                    Klicken Sie auf die Münzen um diese wieder aus der Liste zu entfernen.
                 </p>
 
                 <div class="row justify-content-md-center">
@@ -162,16 +161,31 @@
                             <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
                             <figcaption>
-                                Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
+                                Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/> als Rückgeld
                             </figcaption>
                         </figure>
 
 
                     </div>
 
-                    <div class="container">
-                        <button class="row btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
 
+
+                    <div class="container" >
+
+                        <div class="alert alert-warning" role="alert" ng-if="(txForm.$invalid === true || isTransactionValid === false)">
+                            Bitte wählen Sie genügend UTXOs aus.
+                        </div>
+
+                        <div class="alert alert-info" role="alert" ng-if="(txForm.$invalid === false && isTransactionValid === true)">
+                            Die Transaktion kann nun versendet werden. Bitte klicken Sie den sende Button.
+                            Auf der linken Seite können Sie beobachten, wie die Transaktion versandet wird.
+                        </div>
+
+                        <div class="alert alert-success" role="alert" ng-if="wasTransactionSent">
+                            Transaktion wurde erfolgreich versendet
+                        </div>
+
+                        <button class=" btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
                     </div>
                 </div>
             </div>
@@ -188,14 +202,14 @@
                     <div class="card-header" id="headingOne">
                         <h5 class="mb-0">
                             <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Collapsible Group Item #1
+                                Wie erhält mein die ersten Bitcoins?
                             </button>
                         </h5>
                     </div>
 
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
                         <div class="card-body">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+
                         </div>
                     </div>
                 </div>
@@ -203,7 +217,7 @@
                     <div class="card-header" id="headingTwo">
                         <h5 class="mb-0">
                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Collapsible Group Item #2
+                                Wie sind die Bitcoin Währungseinheiten definiert? (äquivalent zu Franken, Rappen)
                             </button>
                         </h5>
                     </div>
@@ -217,7 +231,35 @@
                     <div class="card-header" id="headingThree">
                         <h5 class="mb-0">
                             <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                Collapsible Group Item #3
+                                Wallet Addressen und wie Bitcoins geschützt werden
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                               Mehr zu Transaktionen, Fees und UTXOs
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <div class="card-body">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Wie wird verhindet, dass UTXOs mehrmals ausgegeben werden? (Double spand)
                             </button>
                         </h5>
                     </div>

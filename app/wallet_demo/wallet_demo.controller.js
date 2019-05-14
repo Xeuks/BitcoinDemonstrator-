@@ -26,10 +26,12 @@ angular
         $scope.currentWallet = $scope.wallets[0];
         $scope.toWallet = $scope.wallets[1];
         $scope.currentTransactionUtxos = [];
-        $scope.fee = 1;
+        $scope.fee = 0.5;
         $scope.amount = 1;
         $scope.currentTransactionAmount = 0;
         $scope.isTransactionValid = false;
+        $scope.wasTransactionSent = false;
+
 
         // reset transaction data when current wallet is changed
         $scope.$watch('currentWallet', function (newValue, oldValue, scope) {
@@ -43,10 +45,7 @@ angular
         $scope.addToTransaction = function(utxo) {
             $scope.currentTransactionAmount += utxo.amount;
 
-            if($scope.currentTransactionAmount >= ($scope.amount+$scope.fee))
-            {
-                $scope.isTransactionValid = true;
-            }
+            $scope.validateTransaction();
 
             $scope.currentTransactionUtxos.push(utxo);
         };
@@ -54,12 +53,7 @@ angular
         $scope.removeFromTransaction = function(utxo) {
             $scope.currentTransactionAmount -= utxo.amount;
 
-
-            if($scope.currentTransactionAmount < ($scope.amount+$scope.fee))
-            {
-
-                $scope.isTransactionValid = false;
-            }
+            $scope.validateTransaction();
 
             var idx = $scope.currentTransactionUtxos.indexOf(utxo);
             $scope.currentTransactionUtxos.splice(idx, 1);
@@ -69,6 +63,10 @@ angular
             return $scope.currentTransactionUtxos.indexOf(utxo) == -1;
         };
 
+        $scope.validateTransaction = function() {
+            $scope.isTransactionValid = $scope.currentTransactionAmount >= ($scope.amount+$scope.fee);
+        };
+
         $scope.sendTransaction = function() {
 
             var transaction = bitcoinNetwork.createTransaction(
@@ -76,7 +74,7 @@ angular
                 $scope.fee, $scope.currentTransactionUtxos
             );
 
-
+            $scope.wasTransactionSent = true;
             bitcoinNetwork.propagateTransaction(transaction);
         };
     }]);
