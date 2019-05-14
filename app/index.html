@@ -35,15 +35,15 @@
 
                 if(urlParts.length === 2) {
                     currentPage = "#!" + urlParts[1];
-                    $('.navbar a').each(function (idx, menuItem) {
+                    $('.menu-item').each(function (idx, menuItem) {
                         if ($(menuItem).attr("href") === currentPage) {
                             $(menuItem).addClass("active");
                         }
                     });
                 }
 
-                $('.navbar a').click(function(){
-                    $('a').removeClass("active");
+                $('.menu-item').click(function(){
+                    $('.menu-item').removeClass("active");
                     $(this).addClass("active");
                 });
             });
