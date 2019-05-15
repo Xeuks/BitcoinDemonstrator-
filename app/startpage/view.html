@@ -1,14 +1,49 @@
 <article ng-controller="StartpageController">
-    <h2>Blockchain </h2>
+    <h2>Bitcoin Demonstrator Startseite </h2>
 
     <div class="card row">
         <div class="card-header">
             <h5>Beschreibung</h5>
         </div>
         <div class="card-body">
+            <p>
+                Diese Webseite demonstriert die wichtigsten Konzepte der Bitcoin Technologie.
+                Dabei kann der Benutzer die Konzepte in den einzelnen Seiten erforschen.
+            </p>
+            <h6>Wie man die Seite verwenden sollte?</h6>
+            <p>
+                Über das Menü gelangen Sie zu den einzelnen Seiten, in denen ein jeweiliger Teilaspekt der Bitcoin Technologie erklärt wird.
+            </p>
+            <p>
+                Am Ende einer Seite befindet sich jeweils ein Weiter-Button. Für Bitcoin Anfänger wird empfohlen den Ablauf, der durch diese Userführung gegeben ist, durchzuspielen.
+                Aus dem Grund, dass die einzelnen Artikel aufeinander aufbauen.
+            </p>
             <p class="card-text">
-                In dieser Demo werden die grundlegenden Informationen zu der Blockchain-Technologie aufgezeigt.
-                Weiterhin wird beschrieben, wie die Bitcoin Blockchain aufgebaut ist und was sie beinhaltet.
+
+                In den einzelnen Artikel sehen sie folgende Elemente, die Ihnen bei der Verwendung dieser Seite behilflich sein sollten.
+
+                <div class="alert alert-info" role="alert">
+                    Anweisungen die Sie bittet eine Aktion durchzuführen.
+                </div>
+
+                <div class="accordion" id="accordionExample">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Klicken Sie hier um weiterführenden Inhalt zu erhalten.
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body">
+                                Genauere Beschreibung einer Fragestellung oder Konzeptes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </p>
         </div>
     </div>
@@ -19,57 +54,61 @@
         </div>
         <div class="card-body">
             <p>
-                Wie der Name schon aussagt, handelt es sich bei einer Blockchain, um eine Kette von Blöcken.
+                Wie der Name schon aussagt, handelt es sich bei einer Blockchain, um eine Kette von Blöcken. Dabei wird bei
+                Bitcoin in den Blöcke eine Sammlung von Transaktionen abgespeichert. Ein Block hat immer eine Referenz auf den
+                vorhergehenden Block.
+
                 Folgende Visualisierung zeigt eine Blockchain mit 4 Blöcken auf.
 
 
-            <div class="row align-items-center justify-content-md-center">
-                <div ng-repeat="i in [1,2,3]">
-                    <img src="./images/blockWithChain.jpg"/>
+                <div class="row align-items-center justify-content-md-center">
+                    <div ng-repeat="i in [1,2,3]">
+                        <img src="./images/blockWithChain.jpg"/>
+                    </div>
+                    <div >
+                        <img src="./images/block.png"/>
+                    </div>
                 </div>
-                <div >
-                    <img src="./images/block.png"/>
-                </div>
-            </div>
             </p>
 
 
             <p class="card-text">
-                Die Verkettung der Blöcke wird gebildet indem ein Block auf den vorhergehenden Block
-                anhand seines Hashwertes verweist. Es stellt sich die Frage was ist ein Hashwert.
-                Der Hashwert wird anhand einer Hashfunktion gebildet. Bei Bitcoin verwendet man die SHA256 Hashfunktion
-                Diese Funktion bildet aus einem Input eine 64-stellige Zeichenfolge, der sogenannte Hashwert bzw. Hash.
-
-                Eine Spezielle Eigenschaft des Hashwertes ist, dass anhand des Hashwertes nicht ermittelt werden kann,
-                was der Input Text ist.
-
-                Die Hashfunktion und löst bei Bitcoin das Problem
-                Mehr zu den Miner erfahren Sie in der Demo <b>TODO</b>.
-            </p>
-            <p>
-                Folgend wird aufgezeigt, was die Hashfunktione macht.
-                Dabei ist der berechnete Hashwert für einen Input-Text immer einzigartig.
+                Die Verkettung der Blöcke wird gebildet indem, ein Block auf den vorhergehenden Block anhand seines Hashwertes verweist.
+                Es stellt sich die Frage was ist ein Hashwert? Der Hashwert wird anhand einer Hashfunktion gebildet.
+                Bei Bitcoin verwendet man die SHA256 Hashfunktion. Diese Funktion bildet aus einem Input eine 64-stellige Zeichenfolge, der sogenannte Hashwert bzw. Hash.
+                Eine spezielle Eigenschaft des Hashwertes ist, dass anhand des Hashwertes nicht ermittelt werden kann, was der Input Text ist.
+                Mehr zur Hashfunktion und wie diese Verwendet wird Sie in der unter Mining und Konsens.
             </p>
 
-            <p>
+            <div class="alert alert-info" role="alert">
                 Bitte ändern Sie den Text um den entsprechenden Hashwert zu generieren.
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Text:</span>
-                </div>
-                <input class="form-control" type="text" id="txHashText" ng-model="hashText">
             </div>
 
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Hash:</span>
+            <p>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Text:</span>
+                    </div>
+                    <input class="form-control" type="text" id="txHashText" ng-model="hashText">
                 </div>
-                <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
-            </div>
+
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Hash:</span>
+                    </div>
+                    <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
+                </div>
 
             </p>
 
         </div>
     </div>
+
+    <nav >
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#!/wallet_demo">Weiter zu Wallet & Transaktionen</a></li>
+        </ul>
+    </nav>
 
 </article>

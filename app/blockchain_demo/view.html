@@ -7,15 +7,7 @@
         </div>
         <div class="card-body">
             <p class="card-text">
-                Diese Webseite demonstriert die Wichtigsten Konzepte der Bitcoin Technologie. Dabei kann der Benutzer die
-                Konzepte in den einzelnen Seiten erforschen.
-
-                In dieser Demo werden die grundlegenden Informationen zu der Blockchain-Technologie aufgezeigt.
-                Weiterhin wird beschrieben, wie die Bitcoin Blockchain aufgebaut ist und was sie beinhaltet
-            </p>
-
-            <p class="card-text">
-
+                In dieser Demo wird aufgezeigt, was der Inhalt der einzelnen Blöcke ist.
             </p>
         </div>
     </div>
@@ -29,15 +21,14 @@
         <div class="card-body">
 
             <p>
-                Hier können Sie erforschen, was der Inhalt eines Blockes ist. Im Bitcoin System werden die Transaktionen
-                die zwischen den Wallets geschen in den Blöcken abgelegt. Dabei werden die Blöcke durch die sogenannten Miners
-                erstellt. Mehr zu den Miner erfahren Sie in der Demo <b>TODO</b>.
+                Hier können Sie erforschen, was der Inhalt eines Blockes ist. Im Bitcoin System werden die Transaktionen, die zwischen den Wallets geschehen, in den Blöcken abgelegt.
             </p>
 
             <h6>Block # {{currentBlockHeight}}</h6>
-            <p>
-                Bitte wählen Sie ein Block aus: <!--select ng-change="setWalletsState(currentBlock);" ng-model="currentBlock" ng-options="block.hash for block in blockchain" ></select-->
-            </p>
+
+            <div class="alert alert-info" role="alert">
+                Bitte wählen Sie ein Block aus, indem Sie auf den Block klicken.
+            </div>
 
             <div id="cyBlockchain" style="width:100%; height: 250px;"></div>
 
@@ -90,12 +81,7 @@
             </table>
 
             <p>
-                Eine Transaktion setzt sich aus einem Sender, Empfänger und dem Betrag der Übermittelt wird zusammen.
-                Weiterhin werden sogenannte UTXO angegeben, die der Sender übermittelt. UTXOs sind die Bitcoin Münzen mit
-                denen man zahlt.
-            </p>
-            <p>
-                Weiter Details zu den Transaktione, UTXOs und Wallets erfahren Sie in der Demo <b>TODO</b>.
+                Eine Transaktion setzt sich aus einem Sender, Empfänger und dem Betrag der Übermittelt wird zusammen. Weiterhin werden sogenannte UTXO angegeben, die der Sender übermittelt. UTXOs sind die Bitcoin Münzen, mit denen man zahlt.
             </p>
 
             <p>
@@ -128,9 +114,9 @@
             </p>
 
             <p>
-                Hier wird der aktuelle Guthaben aller Wallets aufgezeigt. Es ist anzumerken, dass der Kontostand der Wallets
-                nicht in den Blöcken erfasst wird. Der Kontostand eines Wallets muss anhand aller Transaktionen, die
-                vom Genesis Block bis zum aktuellen Block ausgeführt wurden berechnet werden.
+                Hier werden die aktuellen Guthaben aller Wallets aufgezeigt. Es ist anzumerken, dass der Kontostand der Wallets nicht in den Blöcken erfasst wird.
+                Der Kontostand eines Wallets muss anhand aller Transaktionen, die vom Genesis Block bis zum aktuellen Block ausgeführt wurden, berechnet werden.
+                Wie Sie sehen wenn Sie zwischen den Blöcken wechseln, werden die ausgegebenen UTXOs zerstört und neue UTXOs werden erstellt.
             </p>
 
             <p>

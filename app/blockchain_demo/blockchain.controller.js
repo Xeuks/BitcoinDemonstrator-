@@ -131,15 +131,35 @@ angular.module('myApp')
                 if(prevBlock !== undefined)
                     chainToBlock.unshift(prevBlock);
             }
+            chainToBlock.pop();
 
-            chainToBlock.unshift(bitcoinNetwork.getGenesisBlock());
+            $scope.walletStates = [];
+            $scope.nodes.forEach(function (node) {
+                $scope.walletStates[node.address-1] = {address: node.address, balance: 0, utxos: [], receivedUtxos: [], spentUtxos: []};
+            });
+
+
+
+            if(blockIdx == 0) {
+
+
+                block.transactions.forEach(function (transaction) {
+                    var toWalletAddress = transaction.to-1;
+                    transaction.utxos.forEach(function(utxo) {
+                        $scope.walletStates[toWalletAddress].receivedUtxos.push(utxo.amount);
+                    });
+                });
+            }
 
             //iterate over chain aggregate
-            $scope.walletStates = [];
-            if (blockIdx >= 0) {
+            if (blockIdx > 0) {
 
-                $scope.nodes.forEach(function (node) {
-                    $scope.walletStates[node.address-1] = {address: node.address, balance: 0, utxos: [], receivedUtxos: [], spentUtxos: []};
+                var genesisBlock = bitcoinNetwork.getGenesisBlock();
+                genesisBlock.transactions.forEach(function(transaction){
+                    var toWalletAddress = transaction.to-1;
+                    transaction.utxos.forEach(function (utxo) {
+                        $scope.walletStates[toWalletAddress].utxos.push(utxo.amount);
+                    });
                 });
 
                 chainToBlock.forEach(function(prevBlock) {
@@ -165,47 +185,35 @@ angular.module('myApp')
                                 $scope.walletStates[fromWalletAddress-1].utxos.push(transaction.change);
                         }
 
-
                         $scope.walletStates[toWalletAddress].utxos.push(transaction.amount);
                     });
 
                 });
 
+                block.transactions.forEach(function (transaction) {
+                    var toWalletAddress = transaction.to-1;
+                    var fromWalletAddress = transaction.from;
 
-                $scope.walletStates.forEach(function (wallet) {
-                    wallet.balance = 0;
-                    wallet.utxos.forEach(function (utxo) {
-                        wallet.balance += utxo;
-                    });
+                    if(fromWalletAddress > 0) {
+                        $scope.walletStates[fromWalletAddress-1].spentUtxos = $scope.walletStates[fromWalletAddress-1].spentUtxos.concat(transaction.utxos);
+                        if(transaction.change > 0)
+                            $scope.walletStates[fromWalletAddress-1].receivedUtxos.push(transaction.change);
+                    }
+
+                    $scope.walletStates[toWalletAddress].receivedUtxos.push(transaction.amount);
+                });
+            }
+
+            $scope.walletStates.forEach(function (wallet) {
+                wallet.balance = 0;
+                wallet.utxos.forEach(function (utxo) {
+                    wallet.balance += utxo;
                 });
 
-
-                if(blockIdx === 0) {
-                    block.transactions.forEach(function (transaction) {
-                        var toWalletAddress = transaction.to-1;
-                        transaction.utxos.forEach(function(utxo) {
-                            $scope.walletStates[toWalletAddress].receivedUtxos.push(utxo.amount);
-                        });
-                    });
-                } else {
-                    block.transactions.forEach(function (transaction) {
-                        var toWalletAddress = transaction.to-1;
-                        var fromWalletAddress = transaction.from;
-
-                        if(fromWalletAddress > 0) {
-                            $scope.walletStates[fromWalletAddress-1].spentUtxos = $scope.walletStates[fromWalletAddress-1].spentUtxos.concat(transaction.utxos);
-                            if(transaction.change > 0)
-                                $scope.walletStates[fromWalletAddress-1].receivedUtxos.push(transaction.change);
-                        }
-
-                        $scope.walletStates[toWalletAddress].receivedUtxos.push(transaction.amount);
-                    });
-                }
-
-
-
-
-            }
+                wallet.receivedUtxos.forEach(function (utxo) {
+                    wallet.balance += utxo;
+                });
+            });
         };
 
         $scope.setWalletsState($scope.currentBlock);
