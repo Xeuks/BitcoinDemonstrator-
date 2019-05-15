@@ -30,29 +30,35 @@
         <script src="./config.js"><!-- should be last script included --></script>
 
         <script>
-            $(document).ready(function(){
-                var urlParts =  $(location).attr("href").split("#!");
 
-                if(urlParts.length === 2) {
-                    currentPage = "#!" + urlParts[1];
-                    $('.menu-item').each(function (idx, menuItem) {
-                        if ($(menuItem).attr("href") === currentPage) {
-                            $(menuItem).addClass("active");
+            angular
+                .module('myApp')
+                .controller('MainController', ['$scope', function($scope) {
+                    $scope.$on('$routeChangeSuccess', function($event, next, current) {
+                        $('.menu-item').removeClass("active");
+
+                        var urlParts =  $(location).attr("href").split("#!");
+
+                        if(urlParts.length === 2) {
+                            currentPage = "#!" + urlParts[1];
+                            $('.menu-item').each(function (idx, menuItem) {
+                                if ($(menuItem).attr("href") === currentPage) {
+                                    $(menuItem).addClass("active");
+                                }
+                            });
                         }
-                    });
-                }
 
-                $('.menu-item').click(function(){
-                    $('.menu-item').removeClass("active");
-                    $(this).addClass("active");
-                });
-            });
+                        //scroll to top
+                        document.body.scrollTop = 0; // For Safari
+                        document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                    });
+                }]);
         </script>
 
         <title>Bitcoin Demonstrator</title>
     </head>
 
-    <body class="container-fluid" >
+    <body class="container-fluid" ng-controller="MainController" >
         <header class="row indexHead">
             <img src="./images/BC_Logotype.png" alt="Bitcoin Logo">
             <h1> Demonstrator</h1>
@@ -75,7 +81,7 @@
             </section>
 
             <!-- placeholder for the content-->
-            <div class="col-8" data-ng-view></div>
+            <div class="col-8" data-ng-view ></div>
 
 
             <nav class="col-1">

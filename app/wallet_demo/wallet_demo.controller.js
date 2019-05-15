@@ -32,7 +32,6 @@ angular
         $scope.isTransactionValid = false;
         $scope.wasTransactionSent = false;
 
-
         // reset transaction data when current wallet is changed
         $scope.$watch('currentWallet', function (newValue, oldValue, scope) {
             $scope.currentTransactionUtxos = [];
