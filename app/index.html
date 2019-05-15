@@ -30,11 +30,11 @@
         <script src="./config.js"><!-- should be last script included --></script>
 
         <script>
-
             angular
                 .module('myApp')
                 .controller('MainController', ['$scope', function($scope) {
                     $scope.$on('$routeChangeSuccess', function($event, next, current) {
+                        //menu handling
                         $('.menu-item').removeClass("active");
 
                         var urlParts =  $(location).attr("href").split("#!");
@@ -46,7 +46,7 @@
                                     $(menuItem).addClass("active");
                                 }
                             });
-                        }
+                         }
 
                         //scroll to top
                         document.body.scrollTop = 0; // For Safari
