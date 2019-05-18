@@ -51,6 +51,16 @@
                         //scroll to top
                         document.body.scrollTop = 0; // For Safari
                         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+
+
+                        function toggleIcon(e) {
+                            $(e.target)
+
+                                .find(".more-less")
+                                .toggleClass('glyphicon-plus glyphicon-minus');
+                        }
+                        $('.accordion > .card-header > button').on('hidden.bs.collapse', toggleIcon);
+                        $('.accordion > .card-header > button').on('shown.bs.collapse', toggleIcon);
                     });
                 }]);
         </script>
@@ -65,12 +75,12 @@
 
             <div class="navbar navbar-expand-sm flex-grow-1 text-right" id="myNavbar">
                 <ul class="navbar-nav  ml-auto flex-nowrap">
-                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/startpage">Startpage</a></li>
+                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/startpage">Startseite</a></li>
 
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/wallet_demo">Wallet & Transaktionen</a></li>
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/miner_demo">Mining und Konsens</a></li>
                     <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/blockchain_demo">Blockchain</a></li>
-                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/network_demo">Bitcoin Netzwerk (TODO)</a></li>
+                    <li class="nav-item"><a class="nav-link m-2 menu-item" href="#!/network_demo">Bitcoin Netzwerk</a></li>
                 </ul>
             </div>
         </header>

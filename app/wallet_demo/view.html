@@ -64,7 +64,7 @@
                 <div class="form-group">
                     <label for="txAmount">Betrag:</label>
                     <div class="input-group">
-                        <input aria-describedby="amountHelp" class="form-control" id="txAmount"  ng-change="validateTransaction()"  ng-model="amount" type="number" min="1" max="{{(currentWallet|sumUtxos) - fee}}" required>
+                        <input aria-describedby="amountHelp" class="form-control" id="txAmount"  ng-change="validateTransaction()"  ng-model="amount" type="number" min="1" step="0.01" max="{{(currentWallet|sumUtxos) - fee}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
@@ -75,7 +75,7 @@
 
                     <label for="txFee">Fee:</label>
                     <div class="input-group">
-                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" ng-change="validateTransaction()" type="number" min="0" max="{{(currentWallet|sumUtxos) - amount}}" required>
+                        <input aria-describedby="feeHelp" class="form-control" id="txFee" ng-model="fee" ng-change="validateTransaction()" type="number" step="0.01" min="0" max="{{(currentWallet|sumUtxos) - amount}}" required>
                         <div class="input-group-append">
                             <span class="input-group-text">
                                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
@@ -203,10 +203,14 @@
                 <div class="card">
                     <div class="card-header" id="headingOne">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                 Wie erhält mein die ersten Bitcoins?
                             </button>
                         </h5>
+
+
+
                     </div>
 
                     <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">

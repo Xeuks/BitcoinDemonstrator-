@@ -2,6 +2,10 @@ input.ng-invalid-max {
     border: 2px dashed red;
 }
 
+input.ng-invalid-min {
+    border: 2px dashed red;
+}
+
 .indexHead {
     min-height: 4rem;
     background-color: chocolate;
@@ -31,6 +35,18 @@ header {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+.mb-0 > button:before {
+    content: "+";
+    font-weight: bolder;
+    float: left;
+    margin-right: 10px;
+}
+.mb-0 > button[aria-expanded="true"]:before {
+    content: "-";
+    font-weight: bolder;
+}
+
 
 .navbar a {
     color: black;

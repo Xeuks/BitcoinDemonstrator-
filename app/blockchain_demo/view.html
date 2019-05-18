@@ -92,6 +92,7 @@
                         <th>Sender</th>
                         <th>Betrag</th>
                         <th>Fee</th>
+                        <th>Rückgeld</th>
                         <th>UTXOS</th>
                         <th>Empfänger</th>
                     </tr>
@@ -101,6 +102,7 @@
                         <td>{{transaction.from}}</td>
                         <td><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td><div style="width:50px;display:inline;">{{transaction.change}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
 
                         <td >
                             <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in transaction.utxos track by $index">
