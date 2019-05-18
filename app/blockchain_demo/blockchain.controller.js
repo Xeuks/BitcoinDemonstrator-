@@ -43,7 +43,7 @@ angular.module('myApp')
             var numBlocksToLoad =   $scope.blockchain.length;//5;
 
 
-            var nextXPos = 100;
+            var nextXPos = 20;
 
             var hashToBlockchainIndex = {};
 
@@ -85,7 +85,7 @@ angular.module('myApp')
                         nextYPos += 100;
                     });
 
-                    nextXPos += 200;
+                    nextXPos += 100;
                 }
             }
 

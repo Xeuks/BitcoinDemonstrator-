@@ -4,7 +4,7 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
 
     bitcoinNetwork.addListener(this);
 
-    this.idMapping = ["", "a", "b", "c", "d", "e"];
+    $scope.idMapping = ["", "a", "b", "c", "d", "e"];
 
 
 
@@ -12,21 +12,62 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
         bitcoinNetwork.removeListener(this);
     });
 
+    $scope.lastAnimationInfos = {};
+    $scope.animationFinished = true;
 
     this.onNewBlock = function(block) {
-        this.startAnimation(block.minedBy, "./images/block.jpg");
+        $('#exampleModalCenter').modal('show');
+
+
+        $( "#exampleModalCenter" ).on('shown.bs.modal', function(){
+            $scope.cy.resize();
+            $scope.cy.fit();
+            $scope.cy.zoom({
+                level: 1.5, // the zoom level
+            });
+        });
+
+        $scope.lastAnimationInfos = {
+            from: block.minedBy,
+            isValid: block.isValid(),
+            image: "./images/block.jpg"
+        };
+
+        $scope.startAnimation($scope.lastAnimationInfos);
+
     };
 
     this.onNewTransaction = function(transaction) {
-        this.startAnimation(transaction.from, "./images/transaction.jpg");
+        $('#exampleModalCenter').modal('show');
+
+        $( "#exampleModalCenter" ).on('shown.bs.modal', function(){
+            $scope.cy.resize();
+            $scope.cy.fit();
+            $scope.cy.zoom({
+                level: 1.5, // the zoom level
+            });
+        });
+
+        $scope.lastAnimationInfos = {
+            from: transaction.from,
+            isValid: true,
+            image: "./images/transaction.jpg"
+        };
+
+        $scope.startAnimation($scope.lastAnimationInfos);
+
     };
 
-    this.startAnimation = function(initAddress, image) {
+    $scope.replayAnimation = function() {
+        $scope.startAnimation(this.lastAnimationInfos);
+    };
+
+    $scope.startAnimation = function(animationInfo) {
 
         var sentToNeighborNode = [];
 
         $scope.cy.$("node").forEach(function (node) {
-            sentToNeighborNode[node.id()] = [node.id()];
+            sentToNeighborNode[node.id()] = [];
         });
 
         var animatePropagation = function(sourceNode) {
@@ -45,13 +86,13 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                  if(alreadyVisited === undefined){
 
                     var neighborNodeId = neighborNode.id();
-                    var tmpId = "tmp" + neighborNodeId + sourceNode + initAddress;
+                    var tmpId = "tmp" + neighborNodeId + sourceNode + animationInfo.from;
 
                     var pos = $scope.cy.$(nodeId).position();
                     $scope.cy.add({ group: 'nodes', data: { id: tmpId  }, position: {x:pos.x, y: pos.y}});
 
                      $scope.cy.$("#"+tmpId).forEach(function(node) {
-                         node.style("background-image", image);
+                         node.style("background-image", animationInfo.image);
                          node.style("background-fit", "contain");
                          node.style("shape", "rectangle");
                      });
@@ -59,22 +100,25 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
                     $scope.cy.$('#' + tmpId).animate({
                         position: neighborNode.position(),
                     }, {
-                        duration: 2500,
+                        duration: 2750,
                         complete : function() {
-                            //TODO check if valid & only sent if valid
-                            $scope.cy.$('#'+tmpId).remove();
-                            sentToNeighborNode[neighborNodeId].push(sourceNode);
-                            animatePropagation(neighborNodeId);
 
+                            $scope.cy.$('#' + tmpId).remove();
+                            if (animationInfo.isValid) {
+
+                                sentToNeighborNode[neighborNodeId].push(sourceNode);
+                                animatePropagation(neighborNodeId);
+                            }
                         }
                     });
 
                     sentToNeighborNode[sourceNode].push(neighborNodeId);
                  }
             });
+
         };
 
-        animatePropagation(this.idMapping[initAddress]);
+        animatePropagation($scope.idMapping[animationInfo.from]);
     };
 
     $scope.cy = cytoscape({
@@ -103,12 +147,14 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
 
         layout: {
             name: 'breadthfirst',
-            roots: '#a'
+            roots: '#a',
+            spacingFactor: 3
         },
 
         userZoomingEnabled: false,
         userPanningEnabled: false,
         boxSelectionEnabled: false,
+
     });
 
     $scope.cy.nodes().ungrabify();
