@@ -40,7 +40,7 @@
                 <div class="card">
                     <div class="card-header" id="txValidationInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#txValidationInfoText" aria-expanded="true" aria-controls="txValidationInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#txValidationInfoText" aria-expanded="false" aria-controls="txValidationInfoText">
                                 Mehr zur Validation einer Transaktion.
                             </button>
                         </h5>
@@ -112,7 +112,7 @@
                 <div class="card">
                     <div class="card-header" id="candidateBlockInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#candidateBlockInfoText" aria-expanded="true" aria-controls="candidateBlockInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#candidateBlockInfoText" aria-expanded="false" aria-controls="candidateBlockInfoText">
                                 Wie werden die Transaktionen ausgewählt?
                             </button>
                         </h5>
@@ -138,7 +138,7 @@
                 <div class="card">
                     <div class="card-header" id="coinbaseInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#coinbaseInfoText" aria-expanded="true" aria-controls="coinbaseInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#coinbaseInfoText" aria-expanded="false" aria-controls="coinbaseInfoText">
                                 Was beinhaltet die Coinbase Transaktion?
                             </button>
                         </h5>
@@ -192,7 +192,7 @@
                 <div class="card">
                     <div class="card-header" id="HashInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#HashInfoText" aria-expanded="true" aria-controls="HashInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#HashInfoText" aria-expanded="false" aria-controls="HashInfoText">
                                 Was ist eine Hash Funktion?
                             </button>
                         </h5>
@@ -228,7 +228,7 @@
                 <div class="card">
                     <div class="card-header" id="PoWInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#PoWInfoText" aria-expanded="true" aria-controls="PoWInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#PoWInfoText" aria-expanded="false" aria-controls="PoWInfoText">
                                 Wie wird die Antwort auf den Proof of Work gefunden?
                             </button>
                         </h5>
@@ -376,7 +376,7 @@
                 <div class="card">
                     <div class="card-header" id="CompetitionInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#CompetitionInfoText" aria-expanded="true" aria-controls="CompetitionInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#CompetitionInfoText" aria-expanded="false" aria-controls="CompetitionInfoText">
                                 Mining Competition
                             </button>
                         </h5>
@@ -401,7 +401,7 @@
                 <div class="card">
                     <div class="card-header" id="ForkInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ForkInfoText" aria-expanded="true" aria-controls="ForkInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ForkInfoText" aria-expanded="false" aria-controls="ForkInfoText">
                                 Forks
                             </button>
                         </h5>
@@ -459,16 +459,20 @@
             <form>
                 <div class="form-group">
                     <label for="formControlRange">Mining PoW Difficulty  {{difficulty}}</label>
-                    <input type="range" min="1" max="64" class="form-control-range" ng-model="difficulty" id="formControlRange">
+                    <input type="range" min="1" max="10" class="form-control-range" ng-model="difficulty" id="formControlRange" ng-change="calculateMinutesUntilValidHashFound()">
                 </div>
 
                 <div class="form-group">
-                    <label for="formControlRange">HashRate</label>
-                    <input type="number" min="1" max="100" ng-model="hashRate" id="hashRate">
+                    <label for="formControlRange">Hash rate (hash/sekunde)</label>
+                    <input type="number" ng-model="hashesPerSeconds" id="hashRate" ng-change="calculateMinutesUntilValidHashFound()">
                 </div>
 
                 <div>
-                    {{}}
+                    {{secondsUntilHashFound}} sekunden
+                </div>
+
+                <div>
+                    {{hashPowerNeededFor10Min}} hashes/sekunde
                 </div>
             </form>
 
@@ -486,7 +490,7 @@
                 <div class="card">
                     <div class="card-header" id="headingOne">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                                 TODO
                             </button>
                         </h5>

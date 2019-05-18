@@ -23,6 +23,10 @@ angular
         $scope.forkOccured = false;
         $scope.forkResolved = false;
 
+        $scope.hashesPerSeconds = 300;
+        $scope.difficulty = 2;
+
+
         $scope.removeFromMempool = function (index) {
             $scope.currentMiner.mempool.splice(index, 1);
         };
@@ -180,6 +184,15 @@ angular
                 }
             }, 10);
         };
+
+        $scope.calculateMinutesUntilValidHashFound = function() {
+            var numInvalidHashes = ((Math.pow(16, 10)-1) - (Math.pow(16, $scope.difficulty)-1));
+            $scope.secondsUntilHashFound =  numInvalidHashes /  $scope.hashesPerSeconds;
+
+            $scope.hashPowerNeededFor10Min = numInvalidHashes / (10*60);
+        };
+
+        $scope.calculateMinutesUntilValidHashFound();
 
 
 
