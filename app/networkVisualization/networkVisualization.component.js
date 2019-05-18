@@ -23,7 +23,7 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
             $scope.cy.resize();
             $scope.cy.fit();
             $scope.cy.zoom({
-                level: 1.5, // the zoom level
+                level: 1.0, // the zoom level
             });
         });
 
@@ -44,7 +44,7 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
             $scope.cy.resize();
             $scope.cy.fit();
             $scope.cy.zoom({
-                level: 1.5, // the zoom level
+                level: 1.0, // the zoom level
             });
         });
 
@@ -148,7 +148,7 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
         layout: {
             name: 'breadthfirst',
             roots: '#a',
-            spacingFactor: 3
+            spacingFactor: 3.5
         },
 
         userZoomingEnabled: false,
