@@ -168,6 +168,7 @@ function Block(minedBy, transactions, difficulty, parentBlockHash) {
     this.nonce = 0;
     this.hash = "";
     this.parentBlockHash = parentBlockHash;
+    this.isDummy = false;
 
     this.calculateNextHash = function() {
         this.nonce++;
@@ -210,13 +211,15 @@ function Miner(address, utxos) {
     };
 
     this.onNewBlock = function (block) {
-        if(!this.candidateBlock.isValid()) {
-            this.parentHash = block.hash;
-        } else {
-            this.parentHash = this.candidateBlock.hash;
-        }
+        if (!block.isDummy) {
+            if (!this.candidateBlock.isValid()) {
+                this.parentHash = block.hash;
+            } else {
+                this.parentHash = this.candidateBlock.hash;
+            }
 
-        this.mempool = [];
+            this.mempool = [];
+        }
     };
 
     this.createCandidateBlock = function(difficulty) {
