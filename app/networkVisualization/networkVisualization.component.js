@@ -58,10 +58,6 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
 
     };
 
-    $scope.replayAnimation = function() {
-        $scope.startAnimation(this.lastAnimationInfos);
-    };
-
     $scope.startAnimation = function(animationInfo) {
 
         var sentToNeighborNode = [];

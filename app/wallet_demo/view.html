@@ -181,7 +181,7 @@
                             Transaktion wurde erfolgreich versendet
                         </div>
 
-                        <button class=" btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false)" ng-click="sendTransaction()">send Transaction</button>
+                        <button class=" btn btn-outline-primary" ng-disabled="(txForm.$invalid === true || isTransactionValid === false) && wasTransactionSent" ng-click="sendTransaction()">send Transaction</button>
                     </div>
                 </div>
             </div>

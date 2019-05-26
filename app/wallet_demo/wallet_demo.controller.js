@@ -48,6 +48,8 @@ angular
             $scope.validateTransaction();
 
             $scope.currentTransactionUtxos.push(utxo);
+
+            $scope.wasTransactionSent = false;
         };
 
         $scope.removeFromTransaction = function(utxo) {
@@ -57,6 +59,8 @@ angular
 
             var idx = $scope.currentTransactionUtxos.indexOf(utxo);
             $scope.currentTransactionUtxos.splice(idx, 1);
+
+            $scope.wasTransactionSent = false;
         };
 
         $scope.filterAlreadyAddedToTransaction = function(utxo) {

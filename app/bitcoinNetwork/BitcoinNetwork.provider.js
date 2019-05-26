@@ -37,7 +37,6 @@ angular
 
             var genesisBlock = new Block(0, gensisTransactions, 0 , "");
             genesisBlock.calculateNextHash();
-            genesisBlock.height = 0;
 
 
 
@@ -46,7 +45,6 @@ angular
         };
 
         this.$get = function() {
-
             return bcNetwork;
         };
     });
