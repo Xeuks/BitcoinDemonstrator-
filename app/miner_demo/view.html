@@ -61,13 +61,13 @@
             <figure class="col-auto text-center">
                 <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
                 <figcaption>
-                    Miner#<select ng-model="currentMiner" ng-options="miner.address for miner in miners " ></select>
+                    Miner#<select ng-model="currentMiner" ng-options="miner.name for miner in miners " ></select>
                 </figcaption>
             </figure>
 
 
             <div class="container" style="padding:10px 10px;">
-                <h4>Mempool vom Miner {{currentMiner.address}}</h4>
+                <h4>Mempool vom Miner {{currentMiner.name}}</h4>
                 <table class="table table-bordered" id="tbl_mempool">
                     <thead>
                     <tr>
@@ -164,7 +164,7 @@
                                         <figure class="col-auto">
                                             <img src="./images/minerIcon.jpg" height="50px" width="50px" alt="Miner Icon"/>
                                             <figcaption>
-                                                Miner#{{currentMiner.address}}
+                                                Miner {{currentMiner.name}}
                                             </figcaption>
                                         </figure>
                                     </td>
@@ -244,10 +244,10 @@
 
             <div class="col-8 offset-md-2 border border-dark" style="margin-bottom: 20px;">
                 <div class="row justify-content-md-center">
-                    Canidate Block
+                    Candidate Block
                 </div>
                 <div class="row border-top justify-content-md-center">
-                    Gemined durch: Miner#{{currentMiner.address}}
+                    Gemined durch: Miner {{currentMiner.name}}
                 </div>
                 <div class="row border-top">
                     <div class="container">
@@ -256,7 +256,7 @@
                             <div class="col-2">
                                 <img  src="./images/transactionSend.jpg" height="30px" width="80px" />
                             </div>
-                            <div class="col-2">{{currentMiner.address}}</div>
+                            <div class="col-2">{{currentMiner.name}}</div>
                         </div>
                         <div ng-repeat="transaction in currentMiner.mempool">
                             <div class="row justify-content-md-center">
@@ -317,7 +317,7 @@
                     <p  class="row">
                         <div ng-class="{'border-success':  candidateBlocks[miner.address].isValid}" class="border input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">Canidate Block vom Miner {{miner.address}}:</span>
+                                <span class="input-group-text">Candidate Block vom Miner {{miner.name}}:</span>
                             </div>
                             <input class="form-control" type="text" id="" placeholder="{{candidateBlocks[miner.address].hash}}">
                         </div>

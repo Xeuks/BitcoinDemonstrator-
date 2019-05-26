@@ -41,7 +41,7 @@
                              Erstellt durch Miner:
                          </td>
                         <td>
-                            {{currentBlock.minedBy}}
+                            {{getMinerName(currentBlock.minedBy)}}
                         </td>
                     </tr>
                     <tr>
@@ -99,7 +99,7 @@
                     </thead>
                     <tbody id="tbl_transactions_body">
                     <tr  ng-repeat="transaction in currentBlock.transactions track by $index">
-                        <td>{{transaction.from}}</td>
+                        <td>{{getWalletName(transaction.from)}}</td>
                         <td><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td><div style="width:50px;display:inline;">{{transaction.change}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
@@ -109,7 +109,7 @@
                               {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
-                        <td>{{transaction.to}}</td>
+                        <td>{{getWalletName(transaction.to)}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -135,7 +135,7 @@
                     </thead>
                     <tbody id="tbl_transactions_body">
                     <tr  ng-repeat="state in walletStates track by $index">
-                        <td>{{state.address}}</td>
+                        <td>{{getWalletName(state.address)}}</td>
                         <td><div style="width:50px;display:inline;">{{state.balance}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td >
                             <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.utxos track by $index">

@@ -25,7 +25,7 @@
                 <figure class="walletFigure col-auto text-center">
                     <img src="./images/walletIcon.png" height="50px" width="50px" alt="Wallet Icon"/>
                     <figcaption>
-                        Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.address for wallet in wallets " ></select>
+                        Wallet#<select name="txFromWallet" ng-model="currentWallet" ng-options="wallet.name for wallet in wallets " ></select>
                     </figcaption>
                 </figure>
 
@@ -35,9 +35,13 @@
                     <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
                     <figcaption>
-                        Wallet#<select name="txToWallet" ng-options="wallet.address for wallet in wallets | filter:{ address: '!'+currentWallet.address }" ng-model="toWallet"></select>
+                        Wallet#<select name="txToWallet" ng-options="wallet.name for wallet in wallets | filter:{ name: '!'+currentWallet.name }" ng-model="toWallet"></select>
                     </figcaption>
                 </figure>
+            </div>
+
+            <div class="alert alert-info" role="alert">
+                Wallet von {{currentWallet.name}} besitzt ein Guthaben von {{(currentWallet|sumUtxos)}} Bitcoins.
             </div>
         </div>
     </div>
@@ -47,9 +51,6 @@
             <h5 class="card-title">Wallet Applikation</h5>
         </div>
         <div class="card-body">
-            <div class="alert alert-info" role="alert">
-                Wallet {{currentWallet.address}} besitzt ein Guthaben von {{(currentWallet|sumUtxos)}} Bitcoins.
-            </div>
 
             <p class="card-text">
                 In der Wallet App wird dem Benutzer eine Oberfläche
@@ -110,7 +111,7 @@
             </div>
 
             <div class="row justify-content-md-center">
-                <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction">
+                <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction track by $index  ">
                     <img src="./images/BC_Logo.png" height="20px" width="20px" />
 
                     <figcaption>
@@ -130,7 +131,7 @@
                 <div class="row justify-content-md-center">
 
                     <div class="col-2">
-                        <figure  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos">
+                        <figure  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos track by $index">
                             <img src="./images/BC_Logo.png" height="20px" width="20px"/>
 
                             <figcaption>
@@ -148,7 +149,7 @@
                             <img src="./images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
 
                             <figcaption>
-                                Wallet#{{toWallet.address}} erhält {{amount}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
+                                {{toWallet.name}} erhält {{amount}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
                             </figcaption>
                         </figure>
                         <figure ng-if="(fee) > 0" class="text-center" data-toggle="tooltip" data-placement="right" title="Der Miner erhält für seien Arbeit einen Fee als Reward">
@@ -163,7 +164,7 @@
                             <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
                             <figcaption>
-                                Wallet#{{currentWallet.address}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/> als Rückgeld
+                                {{currentWallet.name}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/> als Rückgeld
                             </figcaption>
                         </figure>
 

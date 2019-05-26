@@ -4,12 +4,12 @@ angular
         var bcNetwork;
         var curAddress = 1;
 
-        this.createMiner = function(utxos) {
-            return  new Miner(curAddress++, utxos);
+        this.createMiner = function(name, utxos) {
+            return  new Miner(name, curAddress++, utxos);
         };
 
-        this.createWallet = function(utxos) {
-            return new Wallet(curAddress++, utxos);
+        this.createWallet = function(name, utxos) {
+            return new Wallet(name, curAddress++, utxos);
         };
 
         this.createGenesisTransaction = function(node) {
@@ -26,10 +26,12 @@ angular
             var nodes = [].concat(wallets).concat(miners);
             nodes.forEach(function(node) {
                 var amount = 0;
+                var utxoList = [];
                 node.utxos.forEach(function (utxo) {
                     amount += utxo.amount;
+                    utxoList.push({amount: utxo.amount});
                 });
-                var tx =  {from: 0, to: node.address, amount: amount, utxos : node.utxos, fee: 0, change:0};
+                var tx =  {from: 0, to: node.address, amount: amount, utxos : utxoList, fee: 0, change:0};
                 gensisTransactions.push(tx);
             });
 
@@ -74,13 +76,28 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
         return [].concat(this.wallets).concat(this.miners);
     };
 
+    this.getWalletNameByWalletId = function (walletId) {
+        var wallet = this.getNodes().find(function(node) {
+            return node.address === walletId;
+        });
+
+        return (wallet !== undefined) ? wallet.name : "";
+    };
+
     this.getBlockchain = function() {
         return this.blockchain;
     };
 
     this.getGenesisBlock = function() {
         return this.blockchain[0][0];
-    }
+    };
+
+    this.getCurrentHead = function () {
+        var currentHeight = this.blockchain.length-1;
+
+        // always consider the first block as the head of the main chain
+        return this.blockchain[currentHeight][0];
+    };
 
     this.addListener = function (listener) {
         this.listeners.push(listener);
@@ -98,7 +115,7 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
            return headBlock.hash === block.parentBlockHash;
         });
 
-
+        block.isFork = !isParentInHead;
         if(isParentInHead) {
             this.blockchain.push([block]);
         } else {
@@ -108,12 +125,13 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
     };
 
     this.onNewBlockMined = function(block) {
-        this.propagateBlock(block);
         this.addBlockToBlockchain(block);
+        this.propagateBlock(block);
     };
 
     this.propagateBlock = function (block) {
         var subscribers = this.listeners
+            .concat(this.wallets)
             .concat(this.miners);
 
         subscribers.forEach(function (node) {
@@ -152,6 +170,10 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
                 throw new Error('Transaction could not be build because wallet has not enough bitcoins!');
             }
         }
+        else
+        {
+            utxosList = [].concat(utxos);
+        }
 
         return new Transaction(fromWallet.address, toWallet.address, amount, fee, utxosList);
     };
@@ -169,6 +191,7 @@ function Block(minedBy, transactions, difficulty, parentBlockHash) {
     this.hash = "";
     this.parentBlockHash = parentBlockHash;
     this.isDummy = false;
+    this.isFork = false;
 
     this.calculateNextHash = function() {
         this.nonce++;
@@ -193,12 +216,43 @@ function Block(minedBy, transactions, difficulty, parentBlockHash) {
     };
 }
 
-function Wallet(address, utxos) {
+function Wallet(name, address, utxos) {
+    this.name = name;
     this.address = address;
     this.utxos = utxos;
+
+    this.onNewBlock = function (block) {
+        if (!block.isDummy && !block.isFork) {
+            var that = this;
+            block.transactions.forEach(function (transaction) {
+
+               if(transaction.from === that.address) {
+                    transaction.utxos.forEach(function (transactionUtxo) {
+                        var idx = that.utxos.findIndex(function(curUtxo) {
+                            return transactionUtxo.amount === curUtxo.amount;
+                        });
+
+                        if(idx !== -1){
+                            that.utxos.splice(idx, 1);
+                        }
+
+                        if(transaction.change > 0) {
+                            that.utxos.push({amount: transaction.change});
+                        }
+                    });
+                }
+
+                if(transaction.to === that.address) {
+                    that.utxos.push({amount: transaction.amount});
+                }
+            });
+
+        }
+    };
 }
 
-function Miner(address, utxos) {
+function Miner(name, address, utxos) {
+    this.name = name;
     this.address = address;
     this.utxos = utxos;
     this.mempool = [];
@@ -211,12 +265,38 @@ function Miner(address, utxos) {
     };
 
     this.onNewBlock = function (block) {
-        if (!block.isDummy) {
+        if (!block.isDummy && !block.isFork) {
+            var that = this;
+            block.transactions.forEach(function (transaction) {
+
+                if(transaction.from === that.address) {
+                    transaction.utxos.forEach(function (transactionUtxo) {
+                        var idx = that.utxos.findIndex(function(curUtxo) {
+                            return transactionUtxo.amount === curUtxo.amount;
+                        });
+
+                        if(idx !== -1){
+                            that.utxos.splice(idx, 1);
+                        }
+
+                        if(transaction.change > 0) {
+                            that.utxos.push({amount: transaction.change});
+                        }
+                    });
+                }
+
+                if(transaction.to === that.address) {
+                    that.utxos.push({amount: transaction.amount});
+                }
+            });
+
+            this.parentHash = block.hash;
+            /*
             if (!this.candidateBlock.isValid()) {
                 this.parentHash = block.hash;
             } else {
                 this.parentHash = this.candidateBlock.hash;
-            }
+            }*/
 
             this.mempool = [];
         }

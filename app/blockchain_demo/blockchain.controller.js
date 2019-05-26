@@ -120,18 +120,7 @@ angular.module('myApp')
         $scope.setWalletsState = function(block) {
 
             var blockIdx = $scope.currentBlockHeight;
-            //get chain
-            var chainToBlock = [block];
 
-            var currentHeight = blockIdx;
-            for(currentHeight; currentHeight > 0; currentHeight--) {
-                var prevBlock = $scope.blockchain[currentHeight].find(function (parentBlock) {
-                    return parentBlock.hash === chainToBlock[0].parentBlockHash;
-                });
-                if(prevBlock !== undefined)
-                    chainToBlock.unshift(prevBlock);
-            }
-            chainToBlock.pop();
 
             $scope.walletStates = [];
             $scope.nodes.forEach(function (node) {
@@ -153,6 +142,12 @@ angular.module('myApp')
 
             //iterate over chain aggregate
             if (blockIdx > 0) {
+                var chainToBlock = [];
+                var currentHeight = blockIdx-1;
+                for(currentHeight; currentHeight > 0; currentHeight--) {
+                    var prevBlock = $scope.blockchain[currentHeight][0];
+                    chainToBlock.unshift(prevBlock);
+                }
 
                 var genesisBlock = bitcoinNetwork.getGenesisBlock();
                 genesisBlock.transactions.forEach(function(transaction){
@@ -168,9 +163,9 @@ angular.module('myApp')
                         var fromWalletAddress = transaction.from;
 
 
-
-
                         if(fromWalletAddress > 0) {
+
+
                             transaction.utxos.forEach(function (transactionUtxo) {
                                 var idx = $scope.walletStates[fromWalletAddress-1].utxos.findIndex(function(curUtxo) {
                                     return transactionUtxo.amount === curUtxo;
@@ -213,7 +208,21 @@ angular.module('myApp')
                 wallet.receivedUtxos.forEach(function (utxo) {
                     wallet.balance += utxo;
                 });
+
+                wallet.spentUtxos.forEach(function (utxo) {
+                    wallet.balance -= utxo.amount;
+                });
+
+                wallet.balance = Math.round(wallet.balance * 100) / 100;
             });
+        };
+
+        $scope.getWalletName = function(address) {
+            return (address === 0) ? "Coinbase" : bitcoinNetwork.getWalletNameByWalletId(address);
+        };
+
+        $scope.getMinerName = function(address) {
+            return (address === 0) ? "Genesis Block wurde manuell gemined" : bitcoinNetwork.getWalletNameByWalletId(address);
         };
 
         $scope.setWalletsState($scope.currentBlock);

@@ -48,7 +48,7 @@ angular
 
                 if(mempoolTransaction.from === wallet.address)
                 {
-                    wallet.utxos.forEach(function(utxo, idx){
+                     wallet.utxos.forEach(function(utxo, idx){
                         if(mempoolTransaction.utxos.indexOf(utxo) !== -1)
                         {
                             unUsedUTXOs.splice(idx,1);

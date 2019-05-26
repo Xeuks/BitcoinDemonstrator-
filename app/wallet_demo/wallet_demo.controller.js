@@ -36,6 +36,7 @@ angular
         $scope.$watch('currentWallet', function (newValue, oldValue, scope) {
             $scope.currentTransactionUtxos = [];
             $scope.isTransactionValid = false;
+
             if(oldValue !== newValue)
                 $scope.toWallet = oldValue;
 
@@ -59,7 +60,7 @@ angular
         };
 
         $scope.filterAlreadyAddedToTransaction = function(utxo) {
-            return $scope.currentTransactionUtxos.indexOf(utxo) == -1;
+            return $scope.currentTransactionUtxos.indexOf(utxo) === -1;
         };
 
         $scope.validateTransaction = function() {
@@ -73,10 +74,10 @@ angular
                 $scope.fee, $scope.currentTransactionUtxos
             );
 
-            $scope.currentTransactionUtxos.forEach(function(utxo) {
+           /* $scope.currentTransactionUtxos.forEach(function(utxo) {
                 var idx = $scope.currentWallet.utxos.indexOf(utxo);
                 $scope.currentTransactionUtxos.splice(idx, 1);
-            });
+            });*/
 
             $scope.wasTransactionSent = true;
             bitcoinNetwork.propagateTransaction(transaction);
