@@ -75,6 +75,7 @@
                         <th>An</th>
                         <th>Betrag</th>
                         <th>Fee</th>
+                        <th>Valide</th>
                     </tr>
                     </thead>
                     <tbody id="tbl_posts_body">
@@ -83,6 +84,7 @@
                             <td>{{transaction.to}}</td>
                             <td>{{transaction.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                             <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
+                            <td>{{isMempoolTransactionValid($index)}}   </td>
                             <td>
                                 <button type="button" class="btn btn-outline-primary" ng-click="removeFromMempool($index)">Entfernen</button>
                             </td>

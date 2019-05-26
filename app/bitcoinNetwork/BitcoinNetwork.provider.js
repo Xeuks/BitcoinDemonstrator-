@@ -61,7 +61,6 @@ function BitcoinNetwork(genesisBlock, wallets, miners) {
 
     this.difficulty = 1;
 
-
     this.listeners = [];
 
     this.getMiners = function() {
@@ -219,7 +218,18 @@ function Block(minedBy, transactions, difficulty, parentBlockHash) {
 function Wallet(name, address, utxos) {
     this.name = name;
     this.address = address;
-    this.utxos = utxos;
+    this.utxos = [];
+    this.utxoId = 0;
+
+    this.createNewUtxo = function(amount) {
+        this.utxoId++;
+        return {amount: amount, id: this.utxoId};
+    };
+
+    var that = this;
+    utxos.forEach(function(utxo) {
+        that.utxos.push(that.createNewUtxo(utxo.amount));
+    });
 
     this.onNewBlock = function (block) {
         if (!block.isDummy && !block.isFork) {
@@ -229,32 +239,41 @@ function Wallet(name, address, utxos) {
                if(transaction.from === that.address) {
                     transaction.utxos.forEach(function (transactionUtxo) {
                         var idx = that.utxos.findIndex(function(curUtxo) {
-                            return transactionUtxo.amount === curUtxo.amount;
+                            return transactionUtxo.id === curUtxo.id;
                         });
 
                         if(idx !== -1){
                             that.utxos.splice(idx, 1);
+                        } else {
+
+                            idx = that.utxos.findIndex(function (curUtxo) {
+                                return transactionUtxo.amount === curUtxo.amount;
+                            });
+                            that.utxos.splice(idx, 1);
                         }
 
                         if(transaction.change > 0) {
-                            that.utxos.push({amount: transaction.change});
+                            that.utxos.push(that.createNewUtxo(transaction.change));
                         }
                     });
                 }
 
                 if(transaction.to === that.address) {
-                    that.utxos.push({amount: transaction.amount});
+                    that.utxos.push(that.createNewUtxo(transaction.amount));
                 }
             });
 
         }
     };
+
+
 }
 
 function Miner(name, address, utxos) {
     this.name = name;
     this.address = address;
-    this.utxos = utxos;
+    this.utxos = [];
+    this.utxoId = 0;
     this.mempool = [];
     this.parentHash = "";
 
@@ -264,6 +283,16 @@ function Miner(name, address, utxos) {
         this.mempool.push(transaction);
     };
 
+    this.createNewUtxo = function(amount) {
+        this.utxoId++;
+        return {amount: amount, id: this.utxoId};
+    };
+
+    var that = this;
+    utxos.forEach(function(utxo) {
+        that.utxos.push(that.createNewUtxo(utxo.amount));
+    });
+
     this.onNewBlock = function (block) {
         if (!block.isDummy && !block.isFork) {
             var that = this;
@@ -272,32 +301,31 @@ function Miner(name, address, utxos) {
                 if(transaction.from === that.address) {
                     transaction.utxos.forEach(function (transactionUtxo) {
                         var idx = that.utxos.findIndex(function(curUtxo) {
-                            return transactionUtxo.amount === curUtxo.amount;
+                            return transactionUtxo.id === curUtxo.id;
                         });
 
                         if(idx !== -1){
                             that.utxos.splice(idx, 1);
+                        } else {
+
+                            idx = that.utxos.findIndex(function (curUtxo) {
+                                return transactionUtxo.amount === curUtxo.amount;
+                            });
+                            that.utxos.splice(idx, 1);
                         }
 
                         if(transaction.change > 0) {
-                            that.utxos.push({amount: transaction.change});
+                            that.utxos.push(that.createNewUtxo(transaction.change));
                         }
                     });
                 }
 
                 if(transaction.to === that.address) {
-                    that.utxos.push({amount: transaction.amount});
+                    that.utxos.push(that.createNewUtxo(transaction.amount));
                 }
             });
 
             this.parentHash = block.hash;
-            /*
-            if (!this.candidateBlock.isValid()) {
-                this.parentHash = block.hash;
-            } else {
-                this.parentHash = this.candidateBlock.hash;
-            }*/
-
             this.mempool = [];
         }
     };
@@ -309,10 +337,31 @@ function Miner(name, address, utxos) {
         });
 
         var coinbaseTx = new Transaction(0, this.address, reward, 0, [{amount: reward}]);
-        var transactions = [coinbaseTx].concat(this.mempool);
-
+        var transactions = [coinbaseTx];
+        var that = this;
+        this.mempool.forEach(function (tx, idx) {
+            if(that.isMempoolTransactionValid(idx)) {
+                transactions.push(tx);
+            }
+        });
 
         this.candidateBlock = new Block(this.address, transactions, difficulty, this.parentHash);
+    };
+
+    this.isMempoolTransactionValid = function (txIdx) {
+        var isValid = true;
+        var tx = this.mempool[txIdx];
+        this.mempool.forEach(function(mempoolTx, mempoolIdx){
+            if(txIdx !== mempoolIdx && tx.from === mempoolTx.from) {
+                isValid = isValid && tx.utxos.every(function(txUtxo) {
+                    return mempoolTx.utxos.every(function (utxo) {
+                        return utxo.id !== txUtxo.id;
+                    });
+                });
+            }
+        });
+
+        return isValid;
     };
 }
 
