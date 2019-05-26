@@ -111,13 +111,10 @@
             </div>
 
             <div class="row justify-content-md-center">
-                <figure class="col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction track by $index  ">
-                    <img src="./images/BC_Logo.png" height="20px" width="20px" />
+                <button class="utxo col-auto" ng-click="addToTransaction(utxo)" ng-repeat="utxo in currentWallet.utxos | filter:filterAlreadyAddedToTransaction track by $index  ">
+                    {{utxo.amount}}<img src="./images/BC_Logo.png" height="20px" width="20px" />
 
-                    <figcaption>
-                        {{utxo.amount}}
-                    </figcaption>
-                </figure>
+                </button>
             </div>
 
             <div ng-if="(currentTransactionUtxos.length) > 0">
@@ -131,13 +128,9 @@
                 <div class="row justify-content-md-center">
 
                     <div class="col-2">
-                        <figure  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos track by $index">
-                            <img src="./images/BC_Logo.png" height="20px" width="20px"/>
-
-                            <figcaption>
-                                {{utxo.amount}}
-                            </figcaption>
-                        </figure>
+                        <button class="utxo"  ng-click="removeFromTransaction(utxo)" ng-repeat="utxo in currentTransactionUtxos track by $index">
+                            {{utxo.amount}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
+                        </button>
                     </div>
 
                     <div class="col-2 align-self-center">
@@ -148,14 +141,14 @@
                         <figure ng-if="(amount) > 0" class="text-center">
                             <img src="./images/walletIcon.png" height="50px" width="50px" data-toggle="tooltip" data-placement="right" title="Diesem Wallet wird der Betrag überwiesen"/>
 
-                            <figcaption>
+                            <figcaption class="utxo">
                                 {{toWallet.name}} erhält {{amount}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>
                             </figcaption>
                         </figure>
                         <figure ng-if="(fee) > 0" class="text-center" data-toggle="tooltip" data-placement="right" title="Der Miner erhält für seien Arbeit einen Fee als Reward">
                             <img src="./images/minerIcon.jpg" height="50px" width="50px"/>
 
-                            <figcaption>
+                            <figcaption class="utxo">
                                 Miner verdient {{fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/>  als Verarbeitungskosten
                             </figcaption>
                         </figure>
@@ -163,7 +156,7 @@
                         <figure ng-if="(currentTransactionAmount - amount - fee) > 1" class="text-center" data-toggle="tooltip" data-placement="right" title="Dem Absender wird der Überschuss als Rückgeld zurückgegeben">
                             <img src="./images/walletIcon.png" height="50px" width="50px"/>
 
-                            <figcaption>
+                            <figcaption class="utxo">
                                 {{currentWallet.name}} erhält {{currentTransactionAmount - amount - fee}}<img src="./images/BC_Logo.png" height="20px" width="20px"/> als Rückgeld
                             </figcaption>
                         </figure>

@@ -78,8 +78,8 @@ angular
                     var transaction = bitcoinNetwork.createTransaction(
                         wallet,
                         $scope.wallets[toIdx],
-                        unUsedUTXOs[0].amount-0.5,
-                        0.5
+                        unUsedUTXOs[0].amount-0.1,
+                        0.1
                     );
 
                     miner.mempool.push(transaction);

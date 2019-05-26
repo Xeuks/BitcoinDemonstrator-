@@ -33,52 +33,45 @@
             <div id="cyBlockchain" style="width:100%; height: 250px;"></div>
 
             <h6>Block Informationen</h6>
-            <table class="table table-bordered" id="tbl_blocksummary">
-                <tbody id="tbl_blocksummary_body">
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
                     <tr>
+                        <th scope="row">Erstellt durch Miner:</th>
+                        <td>{{getMinerName(currentBlock.minedBy)}}</td>
 
-                         <td>
-                             Erstellt durch Miner:
-                         </td>
-                        <td>
-                            {{getMinerName(currentBlock.minedBy)}}
-                        </td>
                     </tr>
                     <tr>
-                        <td>
-                           Nonce:
-                        </td>
-                        <td>
-                            {{currentBlock.nonce}}
-                        </td>
+                        <th scope="row">Nonce:</th>
+                        <td>{{currentBlock.nonce}}</td>
+
                     </tr>
                     <tr>
-                        <td>
-                            Hash:
-                        </td>
-                        <td>
-                            {{currentBlock.hash}}
-                        </td>
+                        <th scope="row">Hash:</th>
+                        <td>{{currentBlock.hash}}</td>
                     </tr>
+
                     <tr>
-                        <td>
+                        <th scope="row">
                             Erhaltener Reward:
-                        </td>
+                        </th>
                         <td>
                             {{getBlockReward(currentBlock)}}
                         </td>
                     </tr>
                     <tr>
-                        <td>
+                        <th scope="row">
                             Vorheriger Block:
-                        </td>
+                        </th>
                         <td>
                             {{getPreviousBlockHash(currentBlock)}}
 
                         </td>
                     </tr>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+
 
             <p>
                 Eine Transaktion setzt sich aus einem Sender, Empfänger und dem Betrag der Übermittelt wird zusammen. Weiterhin werden sogenannte UTXO angegeben, die der Sender übermittelt. UTXOs sind die Bitcoin Münzen, mit denen man zahlt.
@@ -86,26 +79,30 @@
 
             <p>
                 <h6>Transaktionen</h6>
+
+
+
+
                 <table class="table table-bordered" id="tbl_transactions">
                     <thead>
                     <tr>
-                        <th>Sender</th>
-                        <th>Betrag</th>
-                        <th>Fee</th>
-                        <th>Rückgeld</th>
-                        <th>UTXOS</th>
-                        <th>Empfänger</th>
+                        <th scope="col">Sender</th>
+                        <th scope="col">Betrag</th>
+                        <th scope="col">Fee</th>
+                        <th scope="col">Rückgeld</th>
+                        <th scope="col">UTXOS</th>
+                        <th scope="col">Empfänger</th>
                     </tr>
                     </thead>
                     <tbody id="tbl_transactions_body">
                     <tr  ng-repeat="transaction in currentBlock.transactions track by $index">
-                        <td>{{getWalletName(transaction.from)}}</td>
-                        <td><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
-                        <td><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
-                        <td><div style="width:50px;display:inline;">{{transaction.change}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td scope="row">{{getWalletName(transaction.from)}}</td>
+                        <td class="utxo"><div style="width:50px;display:inline;">{{transaction.amount}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td class="utxo"><div style="width:50px;display:inline;">{{transaction.fee}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td class="utxo"><div style="width:50px;display:inline;">{{transaction.change}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in transaction.utxos track by $index">
+                            <div class="utxo" style="width:50px;display:inline-block;" class="col" ng-repeat="utxo in transaction.utxos track by $index">
                               {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
@@ -136,21 +133,21 @@
                     <tbody id="tbl_transactions_body">
                     <tr  ng-repeat="state in walletStates track by $index">
                         <td>{{getWalletName(state.address)}}</td>
-                        <td><div style="width:50px;display:inline;">{{state.balance}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
+                        <td class="utxo"><div style="width:50px;display:inline;">{{state.balance}}</div><img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.utxos track by $index">
+                            <div class="utxo" style="width:50px;display:inline-block;" class="col" ng-repeat="utxo in state.utxos track by $index">
                                 {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.receivedUtxos track by $index">
+                            <div class="utxo" style="width:50px;display:inline-block;" class="col" ng-repeat="utxo in state.receivedUtxos track by $index">
                                 {{utxo}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
 
                         <td >
-                            <div style="width:50px;display:inline;margin:0;padding:0;" class="col" ng-repeat="utxo in state.spentUtxos track by $index">
+                            <div class="utxo" style="width:50px;display:inline-block;" class="col" ng-repeat="utxo in state.spentUtxos track by $index">
                                 {{utxo.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" />
                             </div>
                         </td>
