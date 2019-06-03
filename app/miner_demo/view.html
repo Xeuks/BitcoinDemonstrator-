@@ -41,7 +41,7 @@
                     <div class="card-header" id="txValidationInfo">
                         <h5 class="mb-0">
                             <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#txValidationInfoText" aria-expanded="false" aria-controls="txValidationInfoText">
-                                Mehr zur Validation einer Transaktion.
+                                Wann ist ein Trasnaktion valide? Mehr zur Validation einer Transaktion.
                             </button>
                         </h5>
                     </div>
@@ -80,8 +80,8 @@
                     </thead>
                     <tbody id="tbl_posts_body">
                         <tr ng-repeat="transaction in currentMiner.mempool track by $index">
-                            <td>{{transaction.from}}</td>
-                            <td>{{transaction.to}}</td>
+                            <td>{{getWalletName(transaction.from)}}</td>
+                            <td>{{getWalletName(transaction.to)}}</td>
                             <td>{{transaction.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                             <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
                             <td>{{isMempoolTransactionValid($index)}}   </td>
@@ -254,7 +254,7 @@
                 <div class="row border-top">
                     <div class="container">
                         <div class="row justify-content-md-center">
-                            <div class="col-2">Coinbase</div>
+                            <div class="col-3">Coinbase</div>
                             <div class="col-2">
                                 <img  src="./images/transactionSend.jpg" height="30px" width="80px" />
                             </div>
@@ -262,11 +262,11 @@
                         </div>
                         <div ng-repeat="transaction in currentMiner.mempool">
                             <div class="row justify-content-md-center">
-                                <div class="col-2">{{transaction.from}}</div>
+                                <div class="col-3">{{getWalletName(transaction.from)}}</div>
                                 <div class="col-2">
                                     <img  src="./images/transactionSend.jpg" height="30px" width="80px"/>
                                 </div>
-                                <div class="col-2">{{transaction.to}}</div>
+                                <div class="col-2">{{getWalletName(transaction.to)}}</div>
                             </div>
                         </div>
 

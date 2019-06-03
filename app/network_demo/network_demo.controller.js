@@ -10,9 +10,13 @@ angular
     }])
     .controller('NetworkDemoController', ['$scope', 'bitcoinNetwork', function($scope, bitcoinNetwork) {
         $scope.sendValidBlock = function () {
-            bitcoinNetwork.propagateBlock({minedBy:1, isValid: function () {
-                    return true;
-                }});
+            bitcoinNetwork.propagateBlock(
+                {minedBy:1,
+                        isValid: function () {
+                            return true;
+                        },
+                        isDummy: true
+            });
         };
 
         $scope.sendInvalidBlock = function () {

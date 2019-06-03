@@ -43,7 +43,7 @@ describe("test wallet demo controller", function(){
         $rootScope.$watch = function(){};
     }));
 
-    describe("addToTransaction()", function(){
+    describe("add utxo to current transaction", function(){
         var $scope, controller;
 
 
@@ -92,7 +92,7 @@ describe("test wallet demo controller", function(){
         });
     });
 
-    describe("removeFromTransaction()", function(){
+    describe("remove utxos from transaction", function(){
         var $scope, controller;
         var utxo1 = {amount: 5, $$hashKey:1};
         var utxo2 = {amount: 4, $$hashKey:1};
@@ -116,19 +116,19 @@ describe("test wallet demo controller", function(){
             expect($scope.currentTransactionUtxos.length).toEqual(0);
         });
 
-        it('utxo removed only the provided utxo', function() {
+        it('only the provided utxo is removed', function() {
             $scope.removeFromTransaction(utxo1);
             expect($scope.currentTransactionUtxos.length).toEqual(1);
             expect($scope.currentTransactionUtxos[0]).toEqual(utxo2);
         });
 
-        it('decreases amount', function() {
+        it('transaction amount is decreased according to utxo amount', function() {
             $scope.removeFromTransaction(utxo1);
             $scope.removeFromTransaction(utxo2);
             expect($scope.currentTransactionAmount).toEqual(0);
         });
 
-        it('is transaction invalided after remove', function() {
+        it('is transaction invalided after remove when not utxo are present', function() {
             $scope.removeFromTransaction(utxo1);
             $scope.removeFromTransaction(utxo2);
             expect($scope.isTransactionValid).toEqual(false);

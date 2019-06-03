@@ -93,7 +93,7 @@ angular.module('myApp')
         };
 
         $scope.getBlockReward = function(block) {
-            var reward = ($scope.isCurrentBlockGensisBlock(block)) ? 0 : 10;
+            var reward = ($scope.isCurrentBlockGensisBlock()) ? 0 : 10;
             block.transactions.forEach(function(transaction) {
                 reward += transaction.fee;
             });
@@ -105,7 +105,7 @@ angular.module('myApp')
         $scope.getPreviousBlockHash = function(block) {
             var prevHash = "Gensis Block hat keine Vorgänger";
 
-            if(!$scope.isCurrentBlockGensisBlock(block)) {
+            if(!$scope.isCurrentBlockGensisBlock()) {
                 prevHash = block.parentBlockHash;
             }
 
@@ -129,8 +129,6 @@ angular.module('myApp')
 
 
             if(blockIdx == 0) {
-
-
                 block.transactions.forEach(function (transaction) {
                     var toWalletAddress = transaction.to-1;
                     transaction.utxos.forEach(function(utxo) {

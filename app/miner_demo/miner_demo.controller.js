@@ -26,6 +26,10 @@ angular
         $scope.hashesPerSeconds = 300;
         $scope.difficulty = 2;
 
+        $scope.getWalletName = function(address) {
+            return bitcoinNetwork.getWalletNameByWalletId(address);
+        };
+
         $scope.isMempoolTransactionValid = function(idx) {
             return $scope.currentMiner.isMempoolTransactionValid(idx) ? "ja" : "nein";
         };

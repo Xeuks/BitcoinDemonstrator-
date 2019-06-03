@@ -12,14 +12,6 @@ angular
             return new Wallet(name, curAddress++, utxos);
         };
 
-        this.createGenesisTransaction = function(node) {
-            var amount = 0;
-            node.utxos.forEach(function (utxo) {
-                amount += utxo.amount;
-            });
-            return {from: 0, to: node.address, amount: amount, utxos : node.utxos, fee: 0, change:0};
-        };
-
         this.createBitcoinNetwork = function(wallets, miners) {
             var gensisTransactions = [];
 
@@ -224,10 +216,12 @@ function Wallet(name, address, utxos) {
         return {amount: amount, id: this.utxoId};
     };
 
-    var that = this;
-    utxos.forEach(function(utxo) {
-        that.utxos.push(that.createNewUtxo(utxo.amount));
-    });
+    if(utxos.length > 0) {
+        var that = this;
+        utxos.forEach(function (utxo) {
+            that.utxos.push(that.createNewUtxo(utxo.amount));
+        });
+    }
 
     this.onNewBlock = function (block) {
         if (!block.isDummy && !block.isFork) {
@@ -286,11 +280,12 @@ function Miner(name, address, utxos) {
         return {amount: amount, id: this.utxoId};
     };
 
-    var that = this;
-    utxos.forEach(function(utxo) {
-        that.utxos.push(that.createNewUtxo(utxo.amount));
-    });
-
+    if(utxos.length > 0) {
+        var that = this;
+        utxos.forEach(function (utxo) {
+            that.utxos.push(that.createNewUtxo(utxo.amount));
+        });
+    }
     this.onNewBlock = function (block) {
         if (!block.isDummy && !block.isFork) {
             var that = this;
@@ -330,18 +325,18 @@ function Miner(name, address, utxos) {
 
     this.createCandidateBlock = function(difficulty) {
         var reward = 10;
-        this.mempool.forEach(function (transaction) {
-            reward += transaction.fee;
-        });
 
-        var coinbaseTx = new Transaction(0, this.address, reward, 0, [{amount: reward}]);
-        var transactions = [coinbaseTx];
+        var transactions = [];
         var that = this;
         this.mempool.forEach(function (tx, idx) {
             if(that.isMempoolTransactionValid(idx)) {
+                reward += tx.fee;
                 transactions.push(tx);
             }
         });
+
+        var coinbaseTx = new Transaction(0, this.address, reward, 0, [{amount: reward}])
+        transactions.unshift(coinbaseTx);
 
         this.candidateBlock = new Block(this.address, transactions, difficulty, this.parentHash);
     };
