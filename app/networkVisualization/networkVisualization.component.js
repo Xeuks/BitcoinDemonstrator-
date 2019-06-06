@@ -158,11 +158,11 @@ function NetworkVisualizationController($scope, bitcoinNetwork) {
     var walletImg = "./images/walletIcon.png";
     var minerImg = "./images/minerIcon.jpg";
     var metaData = {
-        "a": {title:"wallet1", img:walletImg},
-        "b": {title:"wallet2", img:walletImg},
-        "c": {title:"miner1", img:minerImg},
-        "d": {title:"miner2", img:minerImg},
-        "e": {title:"miner3", img:minerImg}
+        "a": {title:"Alice", img:walletImg},
+        "b": {title:"Bob", img:walletImg},
+        "c": {title:"Eve", img:minerImg},
+        "d": {title:"Tom", img:minerImg},
+        "e": {title:"John", img:minerImg}
     };
 
 

@@ -31,7 +31,7 @@ angular
         };
 
         $scope.isMempoolTransactionValid = function(idx) {
-            return $scope.currentMiner.isMempoolTransactionValid(idx) ? "ja" : "nein";
+            return $scope.currentMiner.isMempoolTransactionValid(idx);
         };
 
         $scope.removeFromMempool = function (index) {
@@ -193,7 +193,7 @@ angular
         };
 
         $scope.calculateMinutesUntilValidHashFound = function() {
-            var numInvalidHashes = ((Math.pow(16, 10)-1) - (Math.pow(16, $scope.difficulty)-1));
+            var numInvalidHashes = ((Math.pow(16, 5)-1) - (Math.pow(16, $scope.difficulty)-1));
             $scope.secondsUntilHashFound =  numInvalidHashes /  $scope.hashesPerSeconds;
 
             $scope.hashPowerNeededFor10Min = numInvalidHashes / (10*60);

@@ -75,7 +75,7 @@
                         <th>An</th>
                         <th>Betrag</th>
                         <th>Fee</th>
-                        <th>Valide</th>
+                        <th>Gültig</th>
                     </tr>
                     </thead>
                     <tbody id="tbl_posts_body">
@@ -84,7 +84,7 @@
                             <td>{{getWalletName(transaction.to)}}</td>
                             <td>{{transaction.amount}} <img src="./images/BC_Logo.png" height="20px" width="20px" /></td>
                             <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
-                            <td>{{isMempoolTransactionValid($index)}}   </td>
+                            <td>{{isMempoolTransactionValid($index) ? "ja" : "nein"}}   </td>
                             <td>
                                 <button type="button" class="btn btn-outline-primary" ng-click="removeFromMempool($index)">Entfernen</button>
                             </td>
@@ -260,8 +260,8 @@
                             </div>
                             <div class="col-2">{{currentMiner.name}}</div>
                         </div>
-                        <div ng-repeat="transaction in currentMiner.mempool">
-                            <div class="row justify-content-md-center">
+                        <div ng-repeat="transaction in currentMiner.mempool track by $index">
+                            <div class="row justify-content-md-center" ng-show="isMempoolTransactionValid($index)">
                                 <div class="col-3">{{getWalletName(transaction.from)}}</div>
                                 <div class="col-2">
                                     <img  src="./images/transactionSend.jpg" height="30px" width="80px"/>
@@ -378,7 +378,7 @@
                 <div class="card">
                     <div class="card-header" id="CompetitionInfo">
                         <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#CompetitionInfoText" aria-expanded="false" aria-controls="CompetitionInfoText">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#CompetitionInfoText" aria-expanded="true" aria-controls="CompetitionInfoText">
                                 Mining Competition
                             </button>
                         </h5>
@@ -461,7 +461,7 @@
             <form>
                 <div class="form-group">
                     <label for="formControlRange">Mining PoW Difficulty  {{difficulty}}</label>
-                    <input type="range" min="1" max="10" class="form-control-range" ng-model="difficulty" id="formControlRange" ng-change="calculateMinutesUntilValidHashFound()">
+                    <input type="range" min="1" max="5" class="form-control-range" ng-model="difficulty" id="formControlRange" ng-change="calculateMinutesUntilValidHashFound()">
                 </div>
 
                 <div class="form-group">
@@ -469,13 +469,13 @@
                     <input type="number" ng-model="hashesPerSeconds" id="hashRate" ng-change="calculateMinutesUntilValidHashFound()">
                 </div>
 
-                <div>
-                    {{secondsUntilHashFound}} sekunden
-                </div>
+                <p>
+                    {{secondsUntilHashFound}} Sekunden werden benötigt, im Worst-Case Fall, um einen Block zu finden.
+                </p>
 
-                <div>
-                    {{hashPowerNeededFor10Min}} hashes/sekunde
-                </div>
+                <p>
+                    Wenn ein Block in 10 Minuten gefunden werden soll, müsssen {{hashPowerNeededFor10Min}} hashes/sekunde getestet werden.
+                </p>
             </form>
 
 
