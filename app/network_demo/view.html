@@ -2,24 +2,26 @@
 
     <div class="card row">
         <div class="card-header">
-            <h5>Was ist eine Blockchain?</h5>
+            <h5>Gültige und ungültige Blöcke</h5>
         </div>
         <div class="card-body">
 
             <p class="card-text">
-                send propagation
+                In dieser Demonstration wird aufgezeigt, wie das Propagationsverhalten von gültigen und ungültigen
+                Blöcken aussieht.
+            </p>
+
+            <div class="alert alert-info" role="alert">
+                Bitte klicken Sie auf die Buttons, um die Animation zu starten.
+            </div>
+
+            <p class="card-text">
+                <button class=" btn btn-outline-primary" ng-click="sendValidBlock()">ungültigen Block senden</button>
             </p>
 
 
             <p class="card-text">
-                send invalid
-                <button class=" btn btn-outline-primary" ng-click="sendValidBlock()">send valid Block</button>
-            </p>
-
-
-            <p class="card-text">
-                send invalid
-                <button class=" btn btn-outline-primary" ng-click="sendInvalidBlock()">send invalid Block</button>
+                <button class=" btn btn-outline-primary" ng-click="sendInvalidBlock()">gültigen Block senden</button>
             </p>
 
 

@@ -48,7 +48,7 @@
 
                     <div id="txValidationInfoText" class="collapse" aria-labelledby="txValidationInfo" data-parent="#furtherInfoTransactionValidation">
                         <div class="card-body">
-                            wallet signatur
+                            Transaktion sind nur gültig, wenn die UTXOs der Transaktion von keiner anderen Transaktion im Mempool verwendet werden.
                         </div>
                     </div>
                 </div>
@@ -189,60 +189,6 @@
                 Die Antwort auf den  Proof of Work wird ermittelt, indem der Hash des Blockes generiert wird. Falls dieser mit einer bestimmten Anzahl von 0 beginnt, wurde eine gültige Antwort gefunden.
                 Hier wurde definiert, dass ein Hash mit mindestens zwei Nullen beginnen muss, für eine gültige Antwort.
             </p>
-
-            <div class="accordion" id="furtherInfoPow">
-                <div class="card">
-                    <div class="card-header" id="HashInfo">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#HashInfoText" aria-expanded="false" aria-controls="HashInfoText">
-                                Was ist eine Hash Funktion?
-                            </button>
-                        </h5>
-                    </div>
-
-                    <div id="HashInfoText" class="collapse" aria-labelledby="HashInfo" data-parent="#furtherInfoPow">
-                        <div class="card-body">
-
-                            <p>
-                                TODO
-                            </p>
-
-                            <p>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Text:</span>
-                                    </div>
-                                    <input class="form-control" type="text" id="txHashText" ng-model="hashText">
-                                </div>
-
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">Hash:</span>
-                                    </div>
-                                    <input class="form-control" type="text" placeholder="{{getHash(hashText);}}" readonly>
-                                </div>
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header" id="PoWInfo">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#PoWInfoText" aria-expanded="false" aria-controls="PoWInfoText">
-                                Wie wird die Antwort auf den Proof of Work gefunden?
-                            </button>
-                        </h5>
-                    </div>
-
-                    <div id="PoWInfoText" class="collapse" aria-labelledby="PoWInfo" data-parent="#furtherInfoPow">
-                        <div class="card-body">
-                            TODO
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-8 offset-md-2 border border-dark" style="margin-bottom: 20px;">
                 <div class="row justify-content-md-center">
@@ -483,30 +429,6 @@
     </div>
 
 
-    <div class="card row">
-        <div class="card-header">
-            <h5 class="card-title">Weitere Informationen für Interessierte </h5>
-        </div>
-        <div class="card-body">
-            <div class="accordion" id="accordionExample">
-                <div class="card">
-                    <div class="card-header" id="headingOne">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                TODO
-                            </button>
-                        </h5>
-                    </div>
-
-                    <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
-                        <div class="card-body">
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <nav >
         <ul class="pagination">
             <li class="page-item"><a class="page-link menu-item" href="#!/wallet_demo">Zurück zu Wallet & Transaktionen</a></li>
