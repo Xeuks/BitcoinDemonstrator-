@@ -164,7 +164,7 @@ angular
 
                     }
 
-                    if(($scope.dummyNonce % 5) === 0) {
+                    if(($scope.dummyNonce % 10) === 0) {
                         candidateBlock.hash =   candidateBlock.hash = $scope.getHash
                         ("dummmy"+ String(candidateBlock.block.minedBy) + String($scope.dummyNonce));
                     }
