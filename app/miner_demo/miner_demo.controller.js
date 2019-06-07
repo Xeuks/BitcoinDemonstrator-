@@ -156,12 +156,16 @@ angular
                 $scope.candidateBlocks.forEach(function(candidateBlock){
 
                     if(!candidateBlock.block.isValid()) {
-                        candidateBlock.hash = candidateBlock.block.calculateNextHash();
+                         candidateBlock.block.calculateNextHash();
                     }
                     else
                     {
                         numValidBlocks++;
-                        candidateBlock.hash = $scope.getHash
+
+                    }
+
+                    if(($scope.dummyNonce % 5) === 0) {
+                        candidateBlock.hash =   candidateBlock.hash = $scope.getHash
                         ("dummmy"+ String(candidateBlock.block.minedBy) + String($scope.dummyNonce));
                     }
 
