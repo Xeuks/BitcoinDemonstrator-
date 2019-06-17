@@ -86,7 +86,7 @@
                             <td>{{transaction.fee}} <img src="./images/BC_Logo.png" height="20px" width="20px" />   </td>
                             <td>{{isMempoolTransactionValid($index) ? "ja" : "nein"}}   </td>
                             <td>
-                                <button type="button" class="btn btn-outline-primary" ng-click="removeFromMempool($index)">Entfernen</button>
+                                <button type="button" class="btn btn-outline-primary" ng-click="removeFromMempool($index)">X</button>
                             </td>
                         </tr>
                     </tbody>
@@ -200,11 +200,11 @@
                 <div class="row border-top">
                     <div class="container">
                         <div class="row justify-content-md-center">
-                            <div class="col-3">Coinbase</div>
-                            <div class="col-2">
+                            <div class="col">Coinbase</div>
+                            <div class="col">
                                 <img  src="./images/transactionSend.jpg" height="30px" width="80px" />
                             </div>
-                            <div class="col-2">{{currentMiner.name}}</div>
+                            <div class="col">{{currentMiner.name}}</div>
                         </div>
                         <div ng-repeat="transaction in currentMiner.mempool track by $index">
                             <div class="row justify-content-md-center" ng-show="isMempoolTransactionValid($index)">
