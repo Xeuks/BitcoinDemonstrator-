@@ -28,7 +28,7 @@ angular.module('myApp')
                 },
 
                 userZoomingEnabled: false,
-                userPanningEnabled: false,
+                userPanningEnabled: true,
                 boxSelectionEnabled: false,
             });
 
