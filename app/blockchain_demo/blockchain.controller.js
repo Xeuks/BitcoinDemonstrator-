@@ -72,7 +72,7 @@ angular.module('myApp')
                             node.style("shape", "rectangle");
                         });
 
-                        $scope.cy.on('click', 'node', function(evt){
+                        $scope.cy.on('tap', 'node', function(evt){
 
                             var blockchainLocationVector = hashToBlockchainIndex[this.id()];
 
